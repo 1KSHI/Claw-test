@@ -32,12 +32,12 @@ void target_monitor(void)
 void LOGIC(void)
 {
 	switch (current_state) {
-//位置0
+//S_0 初始位置0
 		case S_0:
 			if (move_FLAG[M_2006] == FINISH && move_FLAG[M_3508] == FINISH) {
 					if (servo_FLAG == FINISH) {
 							//夹
-							if(logic_change == PINCH && num_state<3) {
+							if(logic_change == PINCH && num_state<5) {
 									current_state = S_1;
 									num_state++;
 									Logic_FLAG=PINCH;
@@ -77,17 +77,23 @@ void LOGIC(void)
 					}
 			}
 			break;
-//S_1 3508-100mm
+//S_1 3508-100mm（夹取位置1，放置位置2）
 		case S_1:
 			switch (num_state) {
 				case 1:
-					TEMP_YAW_TGT_2006=170;
+					TEMP_YAW_TGT_2006=206;
 					break;
 				case 2:
-					TEMP_YAW_TGT_2006=115;
+					TEMP_YAW_TGT_2006=182;
 					break;
 				case 3:
-					TEMP_YAW_TGT_2006=65;
+					TEMP_YAW_TGT_2006=158;
+					break;
+				case 4:
+					TEMP_YAW_TGT_2006=133;
+					break;
+				case 5:
+					TEMP_YAW_TGT_2006=109;
 					break;
 			}
 			// 如果已经在S_1位置，转到S_2状态
@@ -113,7 +119,7 @@ void LOGIC(void)
 					}
 					if (move_FLAG[M_3508] == FREE) {
 						HAL_Delay(Delay_Time);
-						YAW_TGT[M_3508] = -2100;
+						YAW_TGT[M_3508] = 500;
 						move_FLAG[M_3508] = MOVE;
 					}
 					// 然后移动2006到171位置
@@ -128,7 +134,7 @@ void LOGIC(void)
 					}
 			}
 			break;
-//S_2 3508-90mm
+//S_2 3508-90mm （夹取位置2）
 		case S_2:
 			// 如果已经在DI_2位置，转到D_0状态			
 			if (move_FLAG[M_2006] == FINISH && move_FLAG[M_3508] == FINISH) {
@@ -147,7 +153,7 @@ void LOGIC(void)
 			} else {
 					if (move_FLAG[M_3508] == FREE) {
 							HAL_Delay(Delay_Time);
-							YAW_TGT[M_3508] = -1900;
+							YAW_TGT[M_3508] = 400;
 							move_FLAG[M_3508] = MOVE;
 					}
 					if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE && Logic_FLAG == PINCH) {
@@ -157,17 +163,23 @@ void LOGIC(void)
 			}
 			break;
 
-//S_3 3508-50
+//S_3 3508-50mm （放置位置1）
 		case S_3:
 				switch (num_state) {
 				case 0:
-					TEMP_YAW_TGT_2006=170;
+					TEMP_YAW_TGT_2006=206;
 					break;
 				case 1:
-					TEMP_YAW_TGT_2006=115;
+					TEMP_YAW_TGT_2006=182;
 					break;
 				case 2:
-					TEMP_YAW_TGT_2006=65;
+					TEMP_YAW_TGT_2006=158;
+					break;
+				case 3:
+					TEMP_YAW_TGT_2006=133;
+					break;
+				case 4:
+					TEMP_YAW_TGT_2006=109;
 					break;
 			}
 			// 如果已经在S_3位置，转到S_1状态
@@ -192,7 +204,7 @@ void LOGIC(void)
 					} // 先移动3508到-180位置
 					if (move_FLAG[M_3508] == FREE) {
 						HAL_Delay(Delay_Time);
-						YAW_TGT[M_3508] = -1000;
+						YAW_TGT[M_3508] = 300;
 						move_FLAG[M_3508] = MOVE;
 					} // 然后移动2006到171位置
 					else if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE) {
