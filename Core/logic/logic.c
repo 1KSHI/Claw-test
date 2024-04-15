@@ -7,24 +7,28 @@
 //目标角度监测
 void target_monitor(void)
 {
-		//当前角度
-		current_target[M_2006] = (motor_data[M_2006]->circle)*8191+(motor_data[M_2006]->ecd);
-		//角度误差
+	//2006
+	//当前角度
+	current_target[M_2006] = (motor_data_can2[M_2006]->circle)*8191+(motor_data_can2[M_2006]->ecd);
+	//角度误差
 	target_error[M_2006]=(current_target[M_2006]-ANG_TGT[M_2006])>0?(current_target[M_2006]-ANG_TGT[M_2006]):0;
-		//判断动作是否完成
+	//判断动作是否完成
     if(target_error[M_2006]<2000  && move_FLAG[M_2006]==MOVE)
-		{
-			move_FLAG[M_2006]=FINISH;
-		}
-		//当前角度
-		current_target[M_3508] = (motor_data[M_3508]->circle)*8191+(motor_data[M_3508]->ecd);
-		//角度误差
-		target_error[M_3508]=(current_target[M_3508]-ANG_TGT[M_3508])>0?(current_target[M_3508]-ANG_TGT[M_3508]):0;
-		//判断动作是否完成
+	{
+		move_FLAG[M_2006]=FINISH;
+	}
+	
+	//3508
+	//当前角度
+	current_target[M_3508] = (motor_data_can2[M_3508]->circle)*8191+(motor_data_can2[M_3508]->ecd);
+	current_ang=current_target[M_3508]*(187 * 360) /(3591 * 8191);
+	//角度误差
+	target_error[M_3508]=(current_target[M_3508]-ANG_TGT[M_3508])>0?(current_target[M_3508]-ANG_TGT[M_3508]):0;
+	//判断动作是否完成
     if(target_error[M_3508]<5000  && move_FLAG[M_3508]==MOVE)
-		{
-			move_FLAG[M_3508]=FINISH;
-		}
+	{
+		move_FLAG[M_3508]=FINISH;
+	}
 }
 
 
@@ -34,184 +38,191 @@ void LOGIC(void)
 	switch (current_state) {
 //S_0 初始位置0
 		case S_0:
+			//双电机运动完成
 			if (move_FLAG[M_2006] == FINISH && move_FLAG[M_3508] == FINISH) {
-					if (servo_FLAG == FINISH) {
-							//夹
-							if(logic_change == PINCH && num_state<5) {
-									current_state = S_1;
-									num_state++;
-									Logic_FLAG=PINCH;
-									logic_change=FREE;
-									servo_FLAG = FREE;
-							}  else if(logic_change == PLACE && num_state > 0) {
-									current_state = S_3;
-									num_state--;
-									Logic_FLAG=PLACE;
-									logic_change=FREE;
-									servo_FLAG = FREE;
-							} else{
-									return;
-							}
-							// 重置电机状态为FREE
-							move_FLAG[M_2006] = FREE;
-							move_FLAG[M_3508] = FREE;
-					} else if (servo_FLAG != FINISH) {
-							HAL_Delay(Delay_Time);
-							__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18800);  // 舵机松开
-							HAL_Delay(Delay_Time);
-							servo_FLAG = FINISH;
+				//舵机动作完成
+				if (servo_FLAG == FINISH) {
+					//苗数量小于5时，允许执行夹操作
+					if(logic_change == PINCH && num_state<5) {
+						current_state = S_1;
+						num_state++;
+						Logic_FLAG=PINCH;
+						logic_change=FREE;
+						servo_FLAG = FREE;
+					} //苗数量大于0时，允许执行放操作  
+					else if(logic_change == PLACE && num_state > 0) {
+						current_state = S_3;
+						num_state--;
+						Logic_FLAG=PLACE;
+						logic_change=FREE;
+						servo_FLAG = FREE;
+					} else{
+						return;
 					}
+					// 重置电机状态为FREE
+					move_FLAG[M_2006] = FREE;
+					move_FLAG[M_3508] = FREE;
+				} else if (servo_FLAG != FINISH) {
+					HAL_Delay(Delay_Time);
+					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18800);  // 舵机松开
+					HAL_Delay(Delay_Time);
+					servo_FLAG = FINISH;
+				}
 			} else {
-					// 先移动2006到0位置
-					if (move_FLAG[M_2006] == FREE) {
-							HAL_Delay(Delay_Time);
-							YAW_TGT[M_2006] = 10;
-							move_FLAG[M_2006] = MOVE;
-							HAL_Delay(Delay_Time);
-					}
-					// 然后移动3508到0位置
-					else if (move_FLAG[M_2006] == FINISH && move_FLAG[M_3508] == FREE) {
-							HAL_Delay(Delay_Time);
-							YAW_TGT[M_3508] = 0;
-							move_FLAG[M_3508] = MOVE;
-					}
+				// 移动2006
+				if (move_FLAG[M_2006] == FREE) {
+					HAL_Delay(Delay_Time);
+					YAW_TGT[M_2006] = 10;
+					move_FLAG[M_2006] = MOVE;
+					HAL_Delay(Delay_Time);
+				}
+				// 移动3508
+				else if (move_FLAG[M_2006] == FINISH && move_FLAG[M_3508] == FREE) {
+					HAL_Delay(Delay_Time);
+					YAW_TGT[M_3508] = 0;
+					move_FLAG[M_3508] = MOVE;
+				}
 			}
 			break;
 //S_1 3508-100mm（夹取位置1，放置位置2）
 		case S_1:
+			//选择对应的苗仓库
 			switch (num_state) {
 				case 1:
-					TEMP_YAW_TGT_2006=206;
+					TEMP_YAW_TGT_2006=208.91;
 					break;
 				case 2:
-					TEMP_YAW_TGT_2006=182;
+					TEMP_YAW_TGT_2006=184.37;
 					break;
 				case 3:
-					TEMP_YAW_TGT_2006=158;
+					TEMP_YAW_TGT_2006=159.83;
 					break;
 				case 4:
-					TEMP_YAW_TGT_2006=133;
+					TEMP_YAW_TGT_2006=135.29;
 					break;
 				case 5:
-					TEMP_YAW_TGT_2006=109;
+					TEMP_YAW_TGT_2006=110.75;
 					break;
 			}
 			// 如果已经在S_1位置，转到S_2状态
 			if (move_FLAG[M_2006] == FINISH && move_FLAG[M_3508] == FINISH) {
-					if (servo_FLAG == FINISH) {
-							current_state = (Logic_FLAG == PINCH) ? S_2 : S_0;
-							// 重置电机状态和舵机状态为FREE
-							move_FLAG[M_2006] = FREE;
-							move_FLAG[M_3508] = FREE;
-							servo_FLAG = FREE;
-					} else if (Logic_FLAG == PINCH) {
-							HAL_Delay(Delay_Time);
-							servo_FLAG = FINISH;
-					} else if (Logic_FLAG == PLACE) {
-							HAL_Delay(Delay_Time);
-							servo_FLAG = FINISH;
-					}
+				if (servo_FLAG == FINISH) {
+					//S_1作为夹取和放置的中转状态，需要通过当前逻辑判断去S_2或S_0
+					current_state = (Logic_FLAG == PINCH) ? S_2 : S_0;
+					// 重置电机状态和舵机状态为FREE
+					move_FLAG[M_2006] = FREE;
+					move_FLAG[M_3508] = FREE;
+					servo_FLAG = FREE;
+				} else if (Logic_FLAG == PINCH) {
+					HAL_Delay(Delay_Time);
+					servo_FLAG = FINISH;
+				} else if (Logic_FLAG == PLACE) {
+					HAL_Delay(Delay_Time);
+					servo_FLAG = FINISH;
+				}
 			} else {
-					// 先移动3508到-360位置
-					if(Logic_FLAG == PINCH){
-						__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 19590); // 舵机夹紧
-						HAL_Delay(Delay_Time);
-					}
-					if (move_FLAG[M_3508] == FREE) {
-						HAL_Delay(Delay_Time);
-						YAW_TGT[M_3508] = 500;
-						move_FLAG[M_3508] = MOVE;
-					}
-					// 然后移动2006到171位置
-					else if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE && Logic_FLAG == PINCH) {
-						HAL_Delay(Delay_Time);
-						YAW_TGT[M_2006] = TEMP_YAW_TGT_2006;
-						move_FLAG[M_2006] = MOVE;
-					}
-					else if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE && Logic_FLAG == PLACE) {
-						HAL_Delay(Delay_Time);
-						move_FLAG[M_2006] = FINISH;
-					}
+				// 移动3508
+				if(Logic_FLAG == PINCH){
+					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 19590); // 舵机夹紧
+					HAL_Delay(Delay_Time);
+				}
+				if (move_FLAG[M_3508] == FREE) {
+					HAL_Delay(Delay_Time);
+					YAW_TGT[M_3508] = 500;
+					move_FLAG[M_3508] = MOVE;
+				}
+				// 移动2006
+				else if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE && Logic_FLAG == PINCH) {
+					HAL_Delay(Delay_Time);
+					YAW_TGT[M_2006] = TEMP_YAW_TGT_2006;
+					move_FLAG[M_2006] = MOVE;
+				}
+				else if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE && Logic_FLAG == PLACE) {
+					HAL_Delay(Delay_Time);
+					move_FLAG[M_2006] = FINISH;
+				}
 			}
 			break;
 //S_2 3508-90mm （夹取位置2）
 		case S_2:
 			// 如果已经在DI_2位置，转到D_0状态			
 			if (move_FLAG[M_2006] == FINISH && move_FLAG[M_3508] == FINISH) {
-					if (servo_FLAG == FINISH) {
-							current_state = S_0;
-							// 重置电机状态和舵机状态为FREE
-							move_FLAG[M_2006] = FREE;
-							move_FLAG[M_3508] = FREE;
-							servo_FLAG = FREE;
-					} else if (Logic_FLAG == PINCH) {
-							HAL_Delay(Delay_Time);
-							__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18800);  // 舵机松开
-							HAL_Delay(Delay_Time);
-							servo_FLAG = FINISH;
-					}
+				if (servo_FLAG == FINISH) {
+					current_state = S_0;
+					// 重置电机状态和舵机状态为FREE
+					move_FLAG[M_2006] = FREE;
+					move_FLAG[M_3508] = FREE;
+					servo_FLAG = FREE;
+				} else if (Logic_FLAG == PINCH) {
+					HAL_Delay(Delay_Time);
+					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18800);  // 舵机松开
+					HAL_Delay(Delay_Time);
+					servo_FLAG = FINISH;
+				}
 			} else {
-					if (move_FLAG[M_3508] == FREE) {
-							HAL_Delay(Delay_Time);
-							YAW_TGT[M_3508] = 400;
-							move_FLAG[M_3508] = MOVE;
-					}
-					if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE && Logic_FLAG == PINCH) {
-							HAL_Delay(Delay_Time);
-							move_FLAG[M_2006] = FINISH;
-					}
+				// 移动3508
+				if (move_FLAG[M_3508] == FREE) {
+					HAL_Delay(Delay_Time);
+					YAW_TGT[M_3508] = 400;
+					move_FLAG[M_3508] = MOVE;
+				}
+				// 2006不动
+				if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE && Logic_FLAG == PINCH) {
+					HAL_Delay(Delay_Time);
+					move_FLAG[M_2006] = FINISH;
+				}
 			}
 			break;
 
 //S_3 3508-50mm （放置位置1）
 		case S_3:
-				switch (num_state) {
-				case 0:
-					TEMP_YAW_TGT_2006=206;
-					break;
-				case 1:
-					TEMP_YAW_TGT_2006=182;
-					break;
-				case 2:
-					TEMP_YAW_TGT_2006=158;
-					break;
-				case 3:
-					TEMP_YAW_TGT_2006=133;
-					break;
-				case 4:
-					TEMP_YAW_TGT_2006=109;
-					break;
+			switch (num_state) {
+			case 0:
+				TEMP_YAW_TGT_2006=208.91;
+				break;
+			case 1:
+				TEMP_YAW_TGT_2006=184.37;
+				break;
+			case 2:
+				TEMP_YAW_TGT_2006=159.83;
+				break;
+			case 3:
+				TEMP_YAW_TGT_2006=135.29;
+				break;
+			case 4:
+				TEMP_YAW_TGT_2006=110.75;
+				break;
 			}
 			// 如果已经在S_3位置，转到S_1状态
 			if (move_FLAG[M_2006] == FINISH && move_FLAG[M_3508] == FINISH) {
-					if (servo_FLAG == FINISH) {
-							current_state = S_1;
-							// 重置电机状态和舵机状态为FREE
-							move_FLAG[M_2006] = FREE;
-							move_FLAG[M_3508] = FREE;
-							servo_FLAG = FREE;
-					} else if (Logic_FLAG == PLACE) {
-							HAL_Delay(Delay_Time);
-							HAL_Delay(Delay_Time);
-							__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 19590);  // 舵机夹紧
-							HAL_Delay(Delay_Time);
-							servo_FLAG = FINISH;
-					}
+				if (servo_FLAG == FINISH) {
+					current_state = S_1;
+					// 重置电机状态和舵机状态为FREE
+					move_FLAG[M_2006] = FREE;
+					move_FLAG[M_3508] = FREE;
+					servo_FLAG = FREE;
+				} else if (Logic_FLAG == PLACE) {
+					HAL_Delay(Delay_Time);
+					HAL_Delay(Delay_Time);
+					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 19590);  // 舵机夹紧
+					HAL_Delay(Delay_Time);
+					servo_FLAG = FINISH;
+				}
 			} else {
-					if(Logic_FLAG == PLACE){
-						__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18800); // 舵机松开
-						HAL_Delay(Delay_Time);
-					} // 先移动3508到-180位置
-					if (move_FLAG[M_3508] == FREE) {
-						HAL_Delay(Delay_Time);
-						YAW_TGT[M_3508] = 300;
-						move_FLAG[M_3508] = MOVE;
-					} // 然后移动2006到171位置
-					else if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE) {
-						HAL_Delay(Delay_Time);
-						YAW_TGT[M_2006] = TEMP_YAW_TGT_2006;
-						move_FLAG[M_2006] = MOVE;
-					}
+				if(Logic_FLAG == PLACE){
+					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18800); // 舵机松开
+					HAL_Delay(Delay_Time);
+				} // 移动3508
+				if (move_FLAG[M_3508] == FREE) {
+					HAL_Delay(Delay_Time);
+					YAW_TGT[M_3508] = 300;
+					move_FLAG[M_3508] = MOVE;
+				} // 移动2006
+				else if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE) {
+					HAL_Delay(Delay_Time);
+					YAW_TGT[M_2006] = TEMP_YAW_TGT_2006;
+					move_FLAG[M_2006] = MOVE;
+				}
 			}
 			break;
 		 }
@@ -219,7 +230,10 @@ void LOGIC(void)
 
 
 
-
+/*
+上电初始化部分
+（待调试，现已不用）
+*/
 
 //void error_count_2006()
 //{

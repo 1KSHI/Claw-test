@@ -35,7 +35,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-extern motor_measure_t   *motor_data[4];
+extern motor_measure_t *motor_data_can2[8];
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -45,10 +45,10 @@ extern motor_measure_t   *motor_data[4];
   ******************************************************************************
   * @attention
   *
-  *	上电前注意事项
-  *	
-  *	2006电调编号为1
-  *	3508电调编号为2
+  *	上电前注意事项（电机ID定义在logic.h中）
+  *
+  *	2006电调编号为4
+  *	3508电调编号为3
   *
   ******************************************************************************
   */
@@ -65,7 +65,7 @@ enum State current_state = S_0;
 
 /*------------------------------------------------------------------------------
 	Logic_FLAG
-	电机逻辑标志（FREE, PINCH, PLACE）
+	当前电机逻辑标志（FREE, PINCH, PLACE）
 	作用为判断当前进行夹操作还是放操作
 ------------------------------------------------------------------------------*/
 enum FLAG Logic_FLAG=FREE;
@@ -75,7 +75,7 @@ enum FLAG Logic_FLAG=FREE;
 	电机移动状态标志（FREE, MOVE, FINISH）
 	作用为监测电机是否到达目标
 ------------------------------------------------------------------------------*/
-enum FLAG move_FLAG[2]={FREE,FREE};
+enum FLAG move_FLAG[8]={FREE,FREE};
 
 /*------------------------------------------------------------------------------
 	servo_FLAG
@@ -101,8 +101,9 @@ double TEMP_YAW_TGT_2006=0;
 	motor_state
 	电机状态（1, 2）
 	改变电机环——SPD/ANG
+	（用于上电归零，现已不用）
 ------------------------------------------------------------------------------*/
-uint8_t motor_state[2]={2,2};
+//uint8_t motor_state[8]={0};
 
 /*------------------------------------------------------------------------------
 	logic_change
@@ -116,29 +117,34 @@ enum FLAG logic_change = FREE;
 	PID
 	PID数据
 ------------------------------------------------------------------------------*/
-//RESET零点
-double ZERO_POINT[2] ={0};
+
 //目标角度
-double YAW_TGT[2] = {0,0};
-int SPD_TGT[2] = {0,0};//{-500,500}
-//can输出数值
-int can_output[2] = {0};
+double YAW_TGT[8] = {0};
+//目标速度
+//int SPD_TGT[8] = {0};//{-500,500}
 //计算后的角度
-int ANG_TGT[2] = {0} ;
+double ANG_TGT[8] = {0};
+//当前角度
+double current_ang=0;
+//can输出数值
+int can_output[8] = {0};
 //标志位
 uint8_t FLAG=0;
 
 /*------------------------------------------------------------------------------
 	误差监测
 	用于上电归零初始化
+	（待调试，现已不用）
 ------------------------------------------------------------------------------*/
-//堵转开始和结束的返回角度于圈数（间隔时间1s）
-double STL_BGN_ANG[2]={0,0},STL_END_ANG[2]={0,0};
-//堵转误差
-int stl_error[2]={0};
-//堵转时间计数器
-int stl_counter[2]={0};
-uint8_t init_FLAG[2]={0};
+////RESET零点
+//double ZERO_POINT[8] ={0};
+////堵转开始和结束的返回角度于圈数（间隔时间1s）
+//double STL_BGN_ANG[8]={0,0},STL_END_ANG[8]={0,0};
+////堵转误差
+//int stl_error[8]={0};
+////堵转时间计数器
+//int stl_counter[8]={0};
+//uint8_t init_FLAG[8]={0};
 
 /*------------------------------------------------------------------------------
 	遥控器变量
@@ -154,18 +160,20 @@ uint8_t B1,B2;
 uint8_t Cal_Parity;
 //FALG
 uint8_t USART_FLAG=0;
-	int a_test=0;
-	int b_test=0;
+
+	
 /*------------------------------------------------------------------------------
 	target_monitor变量
 	用于判断电机是否到达目标角度
 ------------------------------------------------------------------------------*/
 //当前角度
-double current_target[2]={0};
+double current_target[8]={0};
 //角度误差
-double target_error[2]={0};
-
+double target_error[8]={0};
+//测试变量，用于看图像微调PID
 double test_target=0;
+
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -223,6 +231,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM3_Init();
   MX_CAN1_Init();
+  MX_CAN2_Init();
   /* USER CODE BEGIN 2 */
 	PID_MODEL_initialize(); 
 	
@@ -230,54 +239,47 @@ int main(void)
 	
 	//PWM开始
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
-	
+	//CAN初始化
 	can_filter_init();
-	HAL_CAN_Start(&hcan1); 
-	HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+	HAL_CAN_Start(&hcan2); 
+	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
 	//DMA开始
 	HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe,1);
-	//__HAL_UART_ENABLE_IT(&huart3,UART_IT_IDLE);  //打开串口空闲中断
+	
 	/*PID*/
 	
 	/*2006*/
 	//SPD 
-	rtP.Kp_s = 0.6901*0.6 ;//0.6901*0.5//0.01
-	rtP.Ki_s = 2.3727*0.01;//2.3727*0.5//0.01
-	rtP.Kd_s = 0.0126;//0.0126
+	rtP.Kp_s = 0.6901*0.7 ;
+	rtP.Ki_s = 2.3727*0.11;
+	rtP.Kd_s = 0.0126;
 	//ANG
-	rtP.Kp_a = 0.83005*0.3 ;//0.83005*2//5
-	rtP.Ki_a = 0.38548*0.003 ;//0.38548*0.3//0.01
-	rtP.Kd_a = 0.051858 ;//0.051858
+	rtP.Kp_a = 0.83005*0.6 ;
+	rtP.Ki_a = 0.38548*0.02 ;
+	rtP.Kd_a = 0.051858 ;
 	
 	/*3508*/
 	//SPD 
-//	rtP.Kp_s_1 = 0.5;
-//	rtP.Ki_s_1 = 0.3;
-//	rtP.Kd_s_1 = 0;
-//	//ANG
-//	rtP.Kp_a_1 = 0.6;
-//	rtP.Ki_a_1 = 0.2;
-//	rtP.Kd_a_1 = 0.1;
-	rtP.Kp_s_1 = 0.6901*0.6 ;//0.6901*0.5//0.01
-	rtP.Ki_s_1 = 2.3727*0.01;//2.3727*0.5//0.01
-	rtP.Kd_s_1 = 0.0126;//0.0126
+	rtP.Kp_s_1 = 0.6901*0.75 ;
+	rtP.Ki_s_1 = 2.3727*0.17;
+	rtP.Kd_s_1 = 0.01;
 	//ANG
-	rtP.Kp_a_1 = 0.83005*0.3 ;//0.83005*2//5
-	rtP.Ki_a_1 = 0.38548*0.003 ;//0.38548*0.3//0.01
-	rtP.Kd_a_1 = 0.051858 ;//0.051858
+	rtP.Kp_a_1 = 0.83005*0.85 ;
+	rtP.Ki_a_1 = 0.38548*0.02 ;
+	rtP.Kd_a_1 = 0.04 ;
 
 	//其他
 	rtP.DeadBand = 800;
 	rtP.trans  = 1;
-	//init_jaw();
 	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18600);  // 舵机松开
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		
+	  //执行逻辑改变
 	  LOGIC();
 	  HAL_Delay(100);
 
@@ -337,135 +339,80 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-
 	if(htim == &htim10)
 	{
-		
 		target_monitor();
 		/* 3508 */
 		ANG_TGT[M_3508]  = YAW_TGT[M_3508] * 3591 * 8191/(187 * 360) ;
-
-		if(motor_state[M_3508]==2)
-		{
-		  rtU.yaw_status1    = 2 ;// ANG
-		  rtU.yaw_target1    = ANG_TGT[M_3508];
-		  rtU.yaw_circle1    = motor_data[M_3508]->circle;
-		  can_output[M_3508] = rtY.yaw_ANG_OUT1 ;
-		}
-		else if(motor_state[M_3508]==1)
-		{
-		  rtU.yaw_status1    = 1 ;// SPD
-		  rtU.yaw_target1    = SPD_TGT[M_3508];
-		  rtU.yaw_circle1    = 0;
-		  can_output[M_3508] = rtY.yaw_SPD_OUT1 ;
-		}
-
-		rtU.yaw_speed_rpm1 = motor_data[M_3508]->speed_rpm;
-		rtU.yaw_ecd1       = motor_data[M_3508]->ecd;
-		rtU.yaw_last_ecd1  = motor_data[M_3508]->last_ecd;
-
+		rtU.yaw_status1    = 2 ;// ANG
+		rtU.yaw_target1    = ANG_TGT[M_3508];
+		rtU.yaw_circle1    = motor_data_can2[M_3508]->circle;
+		can_output[M_3508] = rtY.yaw_ANG_OUT1 ;
+		rtU.yaw_speed_rpm1 = motor_data_can2[M_3508]->speed_rpm;
+		rtU.yaw_ecd1       = motor_data_can2[M_3508]->ecd;
+		rtU.yaw_last_ecd1  = motor_data_can2[M_3508]->last_ecd;
 		/* OUT PUT */	
-		motor_data[1]->circle = rtU.yaw_circle1;
+		motor_data_can2[M_3508]->circle = rtU.yaw_circle1;
 		
 		
 		/* 2006 */
 		ANG_TGT[M_2006]  = YAW_TGT[M_2006] * 36 * 8191 * 35 /( 17 * 360) ;
-		
-		if(motor_state[M_2006]==2)
-		{
-		  rtU.yaw_status    = 2 ;// ANG
-		  rtU.yaw_target    = ANG_TGT[M_2006];
-		  rtU.yaw_circle    = motor_data[M_2006]->circle;
-		  can_output[M_2006] = rtY.yaw_ANG_OUT ;
-		}
-		else if(motor_state[M_2006]==1)
-		{
-		  rtU.yaw_status    = 1 ;// SPD
-		  rtU.yaw_target    = SPD_TGT[M_2006];
-		  rtU.yaw_circle   = 0;
-		  can_output[M_2006] = rtY.yaw_SPD_OUT ;
-		}
-		rtU.yaw_speed_rpm = motor_data[M_2006]->speed_rpm;
-		rtU.yaw_ecd       = motor_data[M_2006]->ecd;
-		rtU.yaw_last_ecd  = motor_data[M_2006]->last_ecd;
-
+		rtU.yaw_status    = 2 ;// ANG
+		rtU.yaw_target    = ANG_TGT[M_2006];
+		rtU.yaw_circle    = motor_data_can2[M_2006]->circle;
+		can_output[M_2006] = rtY.yaw_ANG_OUT ;
+		rtU.yaw_speed_rpm = motor_data_can2[M_2006]->speed_rpm;
+		rtU.yaw_ecd       = motor_data_can2[M_2006]->ecd;
+		rtU.yaw_last_ecd  = motor_data_can2[M_2006]->last_ecd;
 		/* OUT PUT */	
-		motor_data[0]->circle = rtU.yaw_circle;
+		motor_data_can2[M_2006]->circle = rtU.yaw_circle;
+		
 		//test_target=motor_data[M_2006]->speed_rpm;
 		//test_target=((motor_data[M_2006]->ecd)+(motor_data[M_2006]->circle)*8191)*( 17 * 360)/(36 * 8191 * 35);
-//		if (test_target<0)
-//		{
-//			test_target=0;
-//		}
+		//if (test_target<0)
+		//{
+		//	test_target=0;
+		//}
 		
 		PID_MODEL_step();
 		
-		CAN_cmd_chassis(can_output[M_2006],can_output[M_3508],0,0);
-		
-		// data update
-		motor_state_update();
+		CAN2_cmd_chassis(0,0,can_output[M_3508],can_output[M_2006],0,0,0,0);
+
+		motor_state_update_can2();
 
 	}
 	
 }
 
-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-//	if(DataRe.header==0xAA)
-//	{
-//		CAL_MESSAGE();
-//		HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe + 1, sizeof(DataPacket) - 1);
-//	}
-//	else if(DataRe.header!=0xAA)
-//	{
-//		HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
-//	}
-//}
-
-//void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
-//{
-//    if (huart->Instance == USART3)  // 检查是否是huart3发生了错误
-//    {
-//        HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, sizeof(DataPacket));
-//    }
-//}
-
+//遥控器部分
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		if (huart->Instance == USART3)
     {
-				if(DataRe.header==0xAA && USART_FLAG==0)
-				{
-					CAL_MESSAGE();
-					HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe+1, sizeof(DataPacket)-1);
-					USART_FLAG=1;
-				}
-				if(DataRe.header==0xAA && USART_FLAG==1)
-				{
-					CAL_MESSAGE();
-					HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, sizeof(DataPacket));
-				}
-				else
-				{
-					HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
-					USART_FLAG=0;
-				}				
+		if(DataRe.header==0xAA && USART_FLAG==0)
+		{
+			CAL_MESSAGE();
+			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe+1, sizeof(DataPacket)-1);
+			USART_FLAG=1;
 		}
+		if(DataRe.header==0xAA && USART_FLAG==1)
+		{
+			CAL_MESSAGE();
+			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, sizeof(DataPacket));
+		}
+		else
+		{
+			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
+			USART_FLAG=0;
+		}				
+	}
 }
-
-//void HAL_UART_IDLE_Callback(UART_HandleTypeDef *huart)
-//{
-//    if (huart->Instance == USART3)
-//    {
-//					HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
-//					USART_FLAG=0;
-//    }
-//}
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART3)
     {
-					HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
-					USART_FLAG=0;
+		HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
+		USART_FLAG=0;
     }
 }
 

@@ -1,12 +1,18 @@
-/**
+/****
 	*   @brief 本代码是遥控器接收端的解析代码
 	*   @brief 使用方法：
 	*   @brief 一、将下列代码复制到main函数的全局变量声明中，然后就可以在main函数中使用这些数据
 
+	//接收结构体
 	DataPacket DataRe;
-	int16_t lx,ly,rx,ry,lp,rp;
+	//摇杆变量
+	int16_t lx ,ly,rx,ry,lp,rp;
+	//按键变量
 	uint8_t B1,B2;
+	//校验位
 	uint8_t Cal_Parity;
+	//FALG
+	uint8_t USART_FLAG=0;
 
 	*   @brief 二、在初始化部分启动一次DMA接收
 
@@ -15,27 +21,38 @@
 	*   @brief 三、将接收代码复制到main函数的用户代码部分
 
 	void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-		if(DataRe.header==0xAA)
+		if (huart->Instance == USART3)
 		{
-			CAL_MESSAGE();
-			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe + 1, sizeof(DataPacket) - 1);
-		}
-		else if(DataRe.header!=0xAA)
-		{
-			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
+			if(DataRe.header==0xAA && USART_FLAG==0)
+			{
+				CAL_MESSAGE();
+				HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe+1, sizeof(DataPacket)-1);
+				USART_FLAG=1;
+			}
+			if(DataRe.header==0xAA && USART_FLAG==1)
+			{
+					CAL_MESSAGE();
+					HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, sizeof(DataPacket));
+			}
+			else
+			{
+				HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
+				USART_FLAG=0;
+			}				
 		}
 	}
-	
-		void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+
+	void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 	{
-			if (huart->Instance == USART3)  // 检查是否是huart3发生了错误
-			{
-					HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
-			}
+		if (huart->Instance == USART3)
+		{
+			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
+			USART_FLAG=0;
+		}
 	}
 
   *
-	**/
+  ****/
 #include "CALCULATE.h"
 #include "main.h"
 #include "tim.h"

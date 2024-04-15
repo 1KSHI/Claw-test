@@ -4,66 +4,110 @@
 #include "bsp_can.h"
 #include "PID_MODEL.h"
 
-/*动作完成判定*/
-#define DOWN_ALLOW       0
-#define UP_ALLOW         1
-#define DOWN					   2
-#define UP  					   3
-
-/*动作完成判定*/
-#define LEFT_ALLOW       0
-#define RIGHT_ALLOW      1
-#define LEFT       		   2
-#define RIGHT  					 3
-
-/*电机定义*/
-#define  M_2006      0
-#define  M_3508      1
-
+/*电机ID定义*/
+#define  M_2006      3
+#define  M_3508      2
 
 #define Delay_Time  1000
 
-extern int a_test;
-extern int b_test;
-extern int SPD_TGT[2];
-extern uint8_t motor_state[2];
-extern uint8_t init_FLAG[2];
-//电机运动标志
-extern enum FLAG move_FLAG[2];
-//舵机运动标志
+//CAN2电机返回数据
+extern motor_measure_t *motor_data_can2[8];
+
+/*------------------------------------------------------------------------------
+	motor_state
+	电机状态（1, 2）
+	改变电机环——SPD/ANG
+	（用于上电归零，现已不用）
+------------------------------------------------------------------------------*/
+//extern uint8_t motor_state[8];
+
+/*------------------------------------------------------------------------------
+	move_FLAG
+	电机移动状态标志（FREE, MOVE, FINISH）
+	作用为监测电机是否到达目标
+------------------------------------------------------------------------------*/
+extern enum FLAG move_FLAG[8];
+
+/*------------------------------------------------------------------------------
+	servo_FLAG
+	舵机状态标志（FREE, FINISH）
+	作用为判断舵机动作是否完成
+------------------------------------------------------------------------------*/
 extern enum FLAG servo_FLAG;
-//当前存放数量
+
+/*------------------------------------------------------------------------------
+	num_state
+	存放数量（0, 1, 2, 3 ）
+	作用为记录当前存储的苗数量，对下一步操作逻辑进行改变
+------------------------------------------------------------------------------*/
 extern uint8_t num_state;
+
+/*------------------------------------------------------------------------------
+	Logic_FLAG
+	电机逻辑标志（FREE, PINCH, PLACE）
+	作用为判断当前进行夹操作还是放操作
+------------------------------------------------------------------------------*/
 extern enum FLAG Logic_FLAG;
+
+/*------------------------------------------------------------------------------
+	logic_change
+	逻辑改变（PINCH, PLACE）
+	遥控器控制
+------------------------------------------------------------------------------*/
 extern enum FLAG logic_change;
-extern double ZERO_POINT[2];
+
+/*------------------------------------------------------------------------------
+	TEMP_YAW_TGT_2006
+	在switch中改变2006角度
+------------------------------------------------------------------------------*/
 extern double TEMP_YAW_TGT_2006;
-//1s内运动误差检测
-extern double STL_BGN_ANG[2],STL_END_ANG[2];
-extern int stl_error[2];
-extern int stl_counter[2];
 
-//电机数据
-extern motor_measure_t   *motor_data[4];
+/*------------------------------------------------------------------------------
+	误差监测
+	用于上电归零初始化
+	（待调试，现已不用）
+------------------------------------------------------------------------------*/
+//extern double ZERO_POINT[8];
+//extern double STL_BGN_ANG[8],STL_END_ANG[8];
+//extern int stl_error[8];
+//extern int stl_counter[8];
+//extern uint8_t init_FLAG[8];
+//void error_count_3508(void);
+//void error_count_2006(void);
+//void init_jaw(void);
 
-//角度检测
-extern double current_target[2];
-extern double target_error[2];
+/*------------------------------------------------------------------------------
+	target_monitor变量
+	用于判断电机是否到达目标角度
+------------------------------------------------------------------------------*/
+extern double current_target[8];
+extern double target_error[8];
 
-//已转换目标角度
-extern int ANG_TGT[2];
-
+/*------------------------------------------------------------------------------
+	PID
+	PID数据
+------------------------------------------------------------------------------*/
 //目标角度
-extern double YAW_TGT[2];
-
+extern double YAW_TGT[8];
+//目标速度
+//extern int SPD_TGT[8];
+//已转换目标角度
+extern double ANG_TGT[8];
+extern double current_ang;
 //电机数据
 extern P rtP;
 
-// 当前状态
+/*------------------------------------------------------------------------------
+	current_state
+	夹爪当前状态（S_0, S_1, S_2, S_3）
+	作用为改变夹爪位置
+	S_0 (3508:0mm    2006:10°            )
+	S_1 (3508:100mm  2006:65°/115°/165°)
+	S_2 (3508:90mm   2006:65°/115°/165°)
+	S_3 (3508:50mm   2006:65°/115°/165°)
+------------------------------------------------------------------------------*/
 extern enum State current_state;
-void error_count_3508(void);
-void error_count_2006(void);
-void init_jaw(void);
+
 //目标角度检测
 void target_monitor(void);
 
@@ -73,12 +117,13 @@ void LOGIC(void);
 //按键计数
 extern int Pinch_count;
 extern int Place_count;
+
 // 定义夹爪状态
 enum State {
     S_0,
-		S_1,
-		S_2,
-		S_3
+	S_1,
+	S_2,
+	S_3
 };
 
 // 定义运动FLAG状态
@@ -86,12 +131,9 @@ enum FLAG {
     FREE,
     MOVE,
     FINISH,
-		PINCH,
-		PLACE
+	PINCH,
+	PLACE
 };
 
-
-//void error_count();
-//void init_jaw();
 #endif
 

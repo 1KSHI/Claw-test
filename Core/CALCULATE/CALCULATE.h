@@ -37,9 +37,6 @@ extern uint8_t B1,B2;
 //校验位
 extern uint8_t Cal_Parity;
 
-extern double ZERO_POINT[2];
-extern double YAW_TGT[2];
-
 // 当前状态
 extern enum State current_state;
 extern int button_press_count;
