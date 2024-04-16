@@ -43,7 +43,7 @@ void LOGIC(void)
 				//舵机动作完成
 				if (servo_FLAG == FINISH) {
 					//苗数量小于5时，允许执行夹操作
-					if(logic_change == PINCH && num_state<5) {
+					if(logic_change == PINCH && num_state<3) {
 						current_state = S_1;
 						num_state++;
 						Logic_FLAG=PINCH;
@@ -64,7 +64,7 @@ void LOGIC(void)
 					move_FLAG[M_3508] = FREE;
 				} else if (servo_FLAG != FINISH) {
 					HAL_Delay(Delay_Time);
-					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18800);  // 舵机松开
+					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, servo_LO);  // 舵机松开
 					HAL_Delay(Delay_Time);
 					servo_FLAG = FINISH;
 				}
@@ -88,19 +88,19 @@ void LOGIC(void)
 		case S_1:
 			//选择对应的苗仓库
 			switch (num_state) {
+//				case 1:
+//					TEMP_YAW_TGT_2006=208.91;
+//					break;
+//				case 2:
+//					TEMP_YAW_TGT_2006=184.37;
+//					break;
 				case 1:
-					TEMP_YAW_TGT_2006=208.91;
-					break;
-				case 2:
-					TEMP_YAW_TGT_2006=184.37;
-					break;
-				case 3:
 					TEMP_YAW_TGT_2006=159.83;
 					break;
-				case 4:
+				case 2:
 					TEMP_YAW_TGT_2006=135.29;
 					break;
-				case 5:
+				case 3:
 					TEMP_YAW_TGT_2006=110.75;
 					break;
 			}
@@ -123,12 +123,12 @@ void LOGIC(void)
 			} else {
 				// 移动3508
 				if(Logic_FLAG == PINCH){
-					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 19590); // 舵机夹紧
+					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, servo_CA); // 舵机夹紧
 					HAL_Delay(Delay_Time);
 				}
 				if (move_FLAG[M_3508] == FREE) {
 					HAL_Delay(Delay_Time);
-					YAW_TGT[M_3508] = 500;
+					YAW_TGT[M_3508] = S_1_3508;
 					move_FLAG[M_3508] = MOVE;
 				}
 				// 移动2006
@@ -155,7 +155,7 @@ void LOGIC(void)
 					servo_FLAG = FREE;
 				} else if (Logic_FLAG == PINCH) {
 					HAL_Delay(Delay_Time);
-					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18800);  // 舵机松开
+					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, servo_LO);  // 舵机松开
 					HAL_Delay(Delay_Time);
 					servo_FLAG = FINISH;
 				}
@@ -163,7 +163,7 @@ void LOGIC(void)
 				// 移动3508
 				if (move_FLAG[M_3508] == FREE) {
 					HAL_Delay(Delay_Time);
-					YAW_TGT[M_3508] = 400;
+					YAW_TGT[M_3508] = S_2_3508;
 					move_FLAG[M_3508] = MOVE;
 				}
 				// 2006不动
@@ -177,19 +177,19 @@ void LOGIC(void)
 //S_3 3508-50mm （放置位置1）
 		case S_3:
 			switch (num_state) {
+//			case 0:
+//				TEMP_YAW_TGT_2006=208.91;
+//				break;
+//			case 1:
+//				TEMP_YAW_TGT_2006=184.37;
+//				break;
 			case 0:
-				TEMP_YAW_TGT_2006=208.91;
-				break;
-			case 1:
-				TEMP_YAW_TGT_2006=184.37;
-				break;
-			case 2:
 				TEMP_YAW_TGT_2006=159.83;
 				break;
-			case 3:
+			case 1:
 				TEMP_YAW_TGT_2006=135.29;
 				break;
-			case 4:
+			case 2:
 				TEMP_YAW_TGT_2006=110.75;
 				break;
 			}
@@ -204,18 +204,18 @@ void LOGIC(void)
 				} else if (Logic_FLAG == PLACE) {
 					HAL_Delay(Delay_Time);
 					HAL_Delay(Delay_Time);
-					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 19590);  // 舵机夹紧
+					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, servo_CA);  // 舵机夹紧
 					HAL_Delay(Delay_Time);
 					servo_FLAG = FINISH;
 				}
 			} else {
 				if(Logic_FLAG == PLACE){
-					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18800); // 舵机松开
+					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, servo_LO); // 舵机松开
 					HAL_Delay(Delay_Time);
 				} // 移动3508
 				if (move_FLAG[M_3508] == FREE) {
 					HAL_Delay(Delay_Time);
-					YAW_TGT[M_3508] = 300;
+					YAW_TGT[M_3508] = S_3_3508;
 					move_FLAG[M_3508] = MOVE;
 				} // 移动2006
 				else if (move_FLAG[M_3508] == FINISH && move_FLAG[M_2006] == FREE) {

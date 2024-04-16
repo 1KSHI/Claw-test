@@ -238,7 +238,7 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim10); 
 	
 	//PWM开始
-	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
 	//CAN初始化
 	can_filter_init();
 	HAL_CAN_Start(&hcan2); 
@@ -271,8 +271,8 @@ int main(void)
 	//其他
 	rtP.DeadBand = 800;
 	rtP.trans  = 1;
-	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 18600);  // 舵机松开
-	
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, servo_LO);  // 舵机松开
+	HAL_Delay(500);
   /* USER CODE END 2 */
 
   /* Infinite loop */

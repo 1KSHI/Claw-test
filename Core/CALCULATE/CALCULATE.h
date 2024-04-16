@@ -24,7 +24,7 @@
 typedef struct struct_message {
   uint8_t header;
   uint8_t parity;
-  uint8_t data[14];
+  uint8_t data[15];
   uint8_t footer;
 } DataPacket;
 

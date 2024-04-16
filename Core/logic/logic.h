@@ -8,6 +8,13 @@
 #define  M_2006      3
 #define  M_3508      2
 
+#define  servo_LO   17800
+#define	 servo_CA   18600
+
+#define  S_1_3508   1260    //夹取位置1，放置位置21
+#define  S_2_3508   1140    //夹取位置2
+#define  S_3_3508   900    //放置位置1
+
 #define Delay_Time  1000
 
 //CAN2电机返回数据
