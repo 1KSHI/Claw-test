@@ -72,7 +72,7 @@ void LOGIC(void)
 				// 移动2006
 				if (move_FLAG[M_2006] == FREE) {
 					HAL_Delay(Delay_Time);
-					YAW_TGT[M_2006] = 10;
+					YAW_TGT[M_2006] = 29.98;
 					move_FLAG[M_2006] = MOVE;
 					HAL_Delay(Delay_Time);
 				}
@@ -89,19 +89,19 @@ void LOGIC(void)
 			//选择对应的苗仓库
 			switch (num_state) {
 //				case 1:
-//					TEMP_YAW_TGT_2006=208.91;
+//					TEMP_YAW_TGT_2006=H_1;
 //					break;
 //				case 2:
-//					TEMP_YAW_TGT_2006=184.37;
+//					TEMP_YAW_TGT_2006=H_2;
 //					break;
 				case 1:
-					TEMP_YAW_TGT_2006=159.83;
+					TEMP_YAW_TGT_2006=H_3;
 					break;
 				case 2:
-					TEMP_YAW_TGT_2006=135.29;
+					TEMP_YAW_TGT_2006=H_4;
 					break;
 				case 3:
-					TEMP_YAW_TGT_2006=110.75;
+					TEMP_YAW_TGT_2006=H_5;
 					break;
 			}
 			// 如果已经在S_1位置，转到S_2状态
@@ -178,19 +178,19 @@ void LOGIC(void)
 		case S_3:
 			switch (num_state) {
 //			case 0:
-//				TEMP_YAW_TGT_2006=208.91;
+//				TEMP_YAW_TGT_2006=H_1;
 //				break;
 //			case 1:
-//				TEMP_YAW_TGT_2006=184.37;
+//				TEMP_YAW_TGT_2006=H_2;
 //				break;
 			case 0:
-				TEMP_YAW_TGT_2006=159.83;
+				TEMP_YAW_TGT_2006=H_3;
 				break;
 			case 1:
-				TEMP_YAW_TGT_2006=135.29;
+				TEMP_YAW_TGT_2006=H_4;
 				break;
 			case 2:
-				TEMP_YAW_TGT_2006=110.75;
+				TEMP_YAW_TGT_2006=H_5;
 				break;
 			}
 			// 如果已经在S_3位置，转到S_1状态

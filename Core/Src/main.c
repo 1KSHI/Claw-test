@@ -356,7 +356,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		
 		
 		/* 2006 */
-		ANG_TGT[M_2006]  = YAW_TGT[M_2006] * 36 * 8191 * 35 /( 17 * 360) ;
+		ANG_TGT[M_2006]  = YAW_TGT[M_2006] * 36 * 8191 * 2 /( 1 * 360) ;
 		rtU.yaw_status    = 2 ;// ANG
 		rtU.yaw_target    = ANG_TGT[M_2006];
 		rtU.yaw_circle    = motor_data_can2[M_2006]->circle;
@@ -367,12 +367,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		/* OUT PUT */	
 		motor_data_can2[M_2006]->circle = rtU.yaw_circle;
 		
-		//test_target=motor_data[M_2006]->speed_rpm;
-		//test_target=((motor_data[M_2006]->ecd)+(motor_data[M_2006]->circle)*8191)*( 17 * 360)/(36 * 8191 * 35);
-		//if (test_target<0)
-		//{
-		//	test_target=0;
-		//}
+//		test_target=motor_data_can2[M_2006]->speed_rpm;
+//		test_target=((motor_data_can2[M_2006]->ecd)+(motor_data_can2[M_2006]->circle)*8191)*( 1 * 360)/(2 * 8191 * 36);
+//		if (test_target<0)
+//		{
+//			test_target=0;
+//		}
 		
 		PID_MODEL_step();
 		
