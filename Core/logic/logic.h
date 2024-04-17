@@ -11,9 +11,9 @@
 #define  servo_LO   17800
 #define	 servo_CA   18600
 
-#define  S_1_3508   1260    //夹取位置1，放置位置21
-#define  S_2_3508   1140    //夹取位置2
-#define  S_3_3508   900    //放置位置1
+#define  S_1_3508   985    //夹取位置1，放置位置21
+#define  S_2_3508   895    //夹取位置2
+#define  S_3_3508   665    //放置位置1
 
 #define Delay_Time  1000
 
