@@ -2,7 +2,7 @@
 #define LOGIC_H
 #include "main.h"
 #include "bsp_can.h"
-#include "PID_MODEL.h"
+#include "pidctl.h"
 
 /*电机ID定义*/
 #define  M_2006      3
@@ -11,9 +11,9 @@
 #define  servo_LO   17800
 #define	 servo_CA   18800
 
-#define  S_1_3508   1310    //夹取位置1，放置位置21 1210
-#define  S_2_3508   1110    //夹取位置2  1110
-#define  S_3_3508   800    //放置位置1
+#define  S_1_3508   800//1310    //夹取位置1，放置位置21 1210
+#define  S_2_3508   600//1110    //夹取位置2  1110
+#define  S_3_3508   400//800    //放置位置1
 
 #define  H_1		209.98
 #define  H_2		185.44
@@ -73,15 +73,15 @@ extern enum FLAG logic_change;
 	TEMP_YAW_TGT_2006
 	在switch中改变2006角度
 ------------------------------------------------------------------------------*/
-extern double TEMP_YAW_TGT_2006;
+extern float TEMP_YAW_TGT_2006;
 
 /*------------------------------------------------------------------------------
 	误差监测
 	用于上电归零初始化
 	（待调试，现已不用）
 ------------------------------------------------------------------------------*/
-//extern double ZERO_POINT[8];
-//extern double STL_BGN_ANG[8],STL_END_ANG[8];
+//extern float ZERO_POINT[8];
+//extern float STL_BGN_ANG[8],STL_END_ANG[8];
 //extern int stl_error[8];
 //extern int stl_counter[8];
 //extern uint8_t init_FLAG[8];
@@ -93,20 +93,20 @@ extern double TEMP_YAW_TGT_2006;
 	target_monitor变量
 	用于判断电机是否到达目标角度
 ------------------------------------------------------------------------------*/
-extern double current_target[8];
-extern double target_error[8];
+extern float current_target[8];
+extern float target_error[8];
 
 /*------------------------------------------------------------------------------
 	PID
 	PID数据
 ------------------------------------------------------------------------------*/
 //目标角度
-extern double YAW_TGT[8];
+extern float YAW_TGT[8];
 //目标速度
 //extern int SPD_TGT[8];
 //已转换目标角度
-extern double ANG_TGT[8];
-extern double current_ang;
+extern float ANG_TGT[8];
+extern float current_ang;
 //电机数据
 extern P rtP;
 

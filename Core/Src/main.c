@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "PID_MODEL.h"
+#include "pidctl.h"
 #include "arm_math.h"
 #include "bsp_can.h"
 #include "CALCULATE.h"
@@ -95,7 +95,7 @@ uint8_t num_state=0;
 	TEMP_YAW_TGT_2006
 	在switch中改变2006角度
 ------------------------------------------------------------------------------*/
-double TEMP_YAW_TGT_2006=0;
+float TEMP_YAW_TGT_2006=0;
 
 /*------------------------------------------------------------------------------
 	motor_state
@@ -119,13 +119,13 @@ enum FLAG logic_change = FREE;
 ------------------------------------------------------------------------------*/
 
 //目标角度
-double YAW_TGT[8] = {0};
+float YAW_TGT[8] = {0};
 //目标速度
 //int SPD_TGT[8] = {0};//{-500,500}
 //计算后的角度
-double ANG_TGT[8] = {0};
+float ANG_TGT[8] = {0};
 //当前角度
-double current_ang=0;
+float current_ang=0;
 //can输出数值
 int can_output[8] = {0};
 //标志位
@@ -137,9 +137,9 @@ uint8_t FLAG=0;
 	（待调试，现已不用）
 ------------------------------------------------------------------------------*/
 ////RESET零点
-//double ZERO_POINT[8] ={0};
+//float ZERO_POINT[8] ={0};
 ////堵转开始和结束的返回角度于圈数（间隔时间1s）
-//double STL_BGN_ANG[8]={0,0},STL_END_ANG[8]={0,0};
+//float STL_BGN_ANG[8]={0,0},STL_END_ANG[8]={0,0};
 ////堵转误差
 //int stl_error[8]={0};
 ////堵转时间计数器
@@ -167,11 +167,11 @@ uint8_t USART_FLAG=0;
 	用于判断电机是否到达目标角度
 ------------------------------------------------------------------------------*/
 //当前角度
-double current_target[8]={0};
+float current_target[8]={0};
 //角度误差
-double target_error[8]={0};
+float target_error[8]={0};
 //测试变量，用于看图像微调PID
-double test_target=0;
+float test_target=0;
 
 
 /* USER CODE END PD */
@@ -233,7 +233,7 @@ int main(void)
   MX_CAN1_Init();
   MX_CAN2_Init();
   /* USER CODE BEGIN 2 */
-	PID_MODEL_initialize(); 
+	pidctl_initialize(); 
 	
 	HAL_TIM_Base_Start_IT(&htim10); 
 	
@@ -250,27 +250,29 @@ int main(void)
 	
 	/*2006*/
 	//SPD 
-	rtP.Kp_s = 0.6901*0.7 ;
-	rtP.Ki_s = 2.3727*0.11;
-	rtP.Kd_s = 0.0126;
+	rtP.ANG_S_P_CH2_4 = 0.6901*0.7 ;
+	rtP.ANG_S_I_CH2_4 = 2.3727*0.11;
+	rtP.ANG_S_D_CH2_4 = 0.0126;
 	//ANG
-	rtP.Kp_a = 0.83005*0.6 ;
-	rtP.Ki_a = 0.38548*0.02 ;
-	rtP.Kd_a = 0.051858 ;
+	rtP.ANG_A_P_CH2_4 = 0.83005*0.6 ;
+	rtP.ANG_A_I_CH2_4 = 0.38548*0.02 ;
+	rtP.ANG_A_D_CH2_4 = 0.051858 ;
 	
 	/*3508*/
 	//SPD 
-	rtP.Kp_s_1 = 0.6901*0.75 ;
-	rtP.Ki_s_1 = 2.3727*0.17;
-	rtP.Kd_s_1 = 0.01;
+	rtP.ANG_S_P_CH2_3 = 0.6901*0.75 ;
+	rtP.ANG_S_I_CH2_3 = 2.3727*0.17;
+	rtP.ANG_S_D_CH2_3 = 0.01;
 	//ANG
-	rtP.Kp_a_1 = 0.83005*0.85 ;
-	rtP.Ki_a_1 = 0.38548*0.02 ;
-	rtP.Kd_a_1 = 0.04 ;
+	rtP.ANG_A_P_CH2_3 = 0.83005*0.85 ;
+	rtP.ANG_A_I_CH2_3 = 0.38548*0.02 ;
+	rtP.ANG_A_D_CH2_3 = 0.04 ;
 
 	//其他
-	rtP.DeadBand = 800;
-	rtP.trans  = 1;
+	rtP.DEADBAND_CH2_3 = 800;
+	rtP.DEADBAND_CH2_4 = 800;
+	rtP.TRANS_CH2_3  = 0.4;
+	rtP.TRANS_CH2_4  = 0.4;
 	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, servo_LO);  // 舵机松开
 	HAL_Delay(500);
   /* USER CODE END 2 */
@@ -344,28 +346,28 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		target_monitor();
 		/* 3508 */
 		ANG_TGT[M_3508]  = YAW_TGT[M_3508] * 3591 * 8191/(187 * 360) ;
-		rtU.yaw_status1    = 2 ;// ANG
-		rtU.yaw_target1    = ANG_TGT[M_3508];
-		rtU.yaw_circle1    = motor_data_can2[M_3508]->circle;
-		can_output[M_3508] = rtY.yaw_ANG_OUT1 ;
-		rtU.yaw_speed_rpm1 = motor_data_can2[M_3508]->speed_rpm;
-		rtU.yaw_ecd1       = motor_data_can2[M_3508]->ecd;
-		rtU.yaw_last_ecd1  = motor_data_can2[M_3508]->last_ecd;
+		rtU.yaw_status11    = 2 ;// ANG
+		rtU.yaw_target11    = ANG_TGT[M_3508];
+		rtU.yaw_circle11    = motor_data_can2[M_3508]->circle;
+		can_output[M_3508] = rtY.yaw_ANG_OUT11 ;
+		rtU.yaw_speed_rpm11 = motor_data_can2[M_3508]->speed_rpm;
+		rtU.yaw_ecd11       = motor_data_can2[M_3508]->ecd;
+		rtU.yaw_last_ecd11  = motor_data_can2[M_3508]->last_ecd;
 		/* OUT PUT */	
-		motor_data_can2[M_3508]->circle = rtU.yaw_circle1;
+		motor_data_can2[M_3508]->circle = rtU.yaw_circle11;
 		
 		
 		/* 2006 */
 		ANG_TGT[M_2006]  = YAW_TGT[M_2006] * 36 * 8191 * 2 /( 1 * 360) ;
-		rtU.yaw_status    = 2 ;// ANG
-		rtU.yaw_target    = ANG_TGT[M_2006];
-		rtU.yaw_circle    = motor_data_can2[M_2006]->circle;
-		can_output[M_2006] = rtY.yaw_ANG_OUT ;
-		rtU.yaw_speed_rpm = motor_data_can2[M_2006]->speed_rpm;
-		rtU.yaw_ecd       = motor_data_can2[M_2006]->ecd;
-		rtU.yaw_last_ecd  = motor_data_can2[M_2006]->last_ecd;
+		rtU.yaw_status12    = 2 ;// ANG
+		rtU.yaw_target12    = ANG_TGT[M_2006];
+		rtU.yaw_circle12    = motor_data_can2[M_2006]->circle;
+		can_output[M_2006] = rtY.yaw_ANG_OUT12 ;
+		rtU.yaw_speed_rpm12 = motor_data_can2[M_2006]->speed_rpm;
+		rtU.yaw_ecd12       = motor_data_can2[M_2006]->ecd;
+		rtU.yaw_last_ecd12  = motor_data_can2[M_2006]->last_ecd;
 		/* OUT PUT */	
-		motor_data_can2[M_2006]->circle = rtU.yaw_circle;
+		motor_data_can2[M_2006]->circle = rtU.yaw_circle12;
 		
 //		test_target=motor_data_can2[M_2006]->speed_rpm;
 //		test_target=((motor_data_can2[M_2006]->ecd)+(motor_data_can2[M_2006]->circle)*8191)*( 1 * 360)/(2 * 8191 * 36);
@@ -374,7 +376,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //			test_target=0;
 //		}
 		
-		PID_MODEL_step();
+		pidctl_step();
 		
 		CAN2_cmd_chassis(0,0,can_output[M_3508],can_output[M_2006],0,0,0,0);
 

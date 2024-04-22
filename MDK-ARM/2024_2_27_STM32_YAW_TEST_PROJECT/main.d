@@ -37,8 +37,8 @@
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/Inc/tim.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/Inc/usart.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/Inc/gpio.h
-2024_2_27_stm32_yaw_test_project\main.o: ../Core/PID_MODEL/PID_MODEL.h
-2024_2_27_stm32_yaw_test_project\main.o: ../Core/PID_MODEL/rtwtypes.h
+2024_2_27_stm32_yaw_test_project\main.o: ..\Core\pidctl\pidctl.h
+2024_2_27_stm32_yaw_test_project\main.o: ..\Core\pidctl\rtwtypes.h
 2024_2_27_stm32_yaw_test_project\main.o: E:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\arm_math.h
 2024_2_27_stm32_yaw_test_project\main.o: E:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\core_cm4.h
 2024_2_27_stm32_yaw_test_project\main.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

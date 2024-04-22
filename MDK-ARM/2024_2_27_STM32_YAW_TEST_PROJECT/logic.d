@@ -34,8 +34,8 @@
 2024_2_27_stm32_yaw_test_project\logic.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 2024_2_27_stm32_yaw_test_project\logic.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 2024_2_27_stm32_yaw_test_project\logic.o: ../Core/bsp_can/bsp_can.h
-2024_2_27_stm32_yaw_test_project\logic.o: ../Core/PID_MODEL/PID_MODEL.h
-2024_2_27_stm32_yaw_test_project\logic.o: ../Core/PID_MODEL/rtwtypes.h
+2024_2_27_stm32_yaw_test_project\logic.o: ..\Core\pidctl\pidctl.h
+2024_2_27_stm32_yaw_test_project\logic.o: ..\Core\pidctl\rtwtypes.h
 2024_2_27_stm32_yaw_test_project\logic.o: E:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\arm_math.h
 2024_2_27_stm32_yaw_test_project\logic.o: E:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\core_cm4.h
 2024_2_27_stm32_yaw_test_project\logic.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

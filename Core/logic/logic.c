@@ -79,7 +79,7 @@ void LOGIC(void)
 				// 移动3508
 				else if (move_FLAG[M_2006] == FINISH && move_FLAG[M_3508] == FREE) {
 					HAL_Delay(Delay_Time);
-					YAW_TGT[M_3508] = 0;
+					YAW_TGT[M_3508] = 50;
 					move_FLAG[M_3508] = MOVE;
 				}
 			}
