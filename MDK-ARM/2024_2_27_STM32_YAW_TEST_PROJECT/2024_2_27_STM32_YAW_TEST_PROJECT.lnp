@@ -29,8 +29,9 @@
 "2024_2_27_stm32_yaw_test_project\calculate.o"
 "2024_2_27_stm32_yaw_test_project\bsp_can.o"
 "2024_2_27_stm32_yaw_test_project\logic.o"
-"2024_2_27_stm32_yaw_test_project\pidctl.o"
-"2024_2_27_stm32_yaw_test_project\pidctl_data.o"
+"2024_2_27_stm32_yaw_test_project\pid_model.o"
+"2024_2_27_stm32_yaw_test_project\pid_model_data.o"
+"2024_2_27_stm32_yaw_test_project\libelybot_can.o"
 --strict --scatter "2024_2_27_STM32_YAW_TEST_PROJECT\2024_2_27_STM32_YAW_TEST_PROJECT.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

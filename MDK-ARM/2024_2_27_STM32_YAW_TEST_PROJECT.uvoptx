@@ -800,7 +800,7 @@
   </Group>
 
   <Group>
-    <GroupName>pidctl</GroupName>
+    <GroupName>PID_MODEL</GroupName>
     <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
@@ -812,32 +812,32 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Core\pidctl\pidctl.c</PathWithFileName>
-      <FilenameWithoutPath>pidctl.c</FilenameWithoutPath>
+      <PathWithFileName>..\Core\PID_MODEL\PID_MODEL.c</PathWithFileName>
+      <FilenameWithoutPath>PID_MODEL.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>8</GroupNumber>
       <FileNumber>35</FileNumber>
-      <FileType>5</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Core\pidctl\pidctl.h</PathWithFileName>
-      <FilenameWithoutPath>pidctl.h</FilenameWithoutPath>
+      <PathWithFileName>..\Core\PID_MODEL\PID_MODEL_data.c</PathWithFileName>
+      <FilenameWithoutPath>PID_MODEL_data.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>8</GroupNumber>
       <FileNumber>36</FileNumber>
-      <FileType>1</FileType>
+      <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Core\pidctl\pidctl_data.c</PathWithFileName>
-      <FilenameWithoutPath>pidctl_data.c</FilenameWithoutPath>
+      <PathWithFileName>..\Core\PID_MODEL\PID_MODEL.h</PathWithFileName>
+      <FilenameWithoutPath>PID_MODEL.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -848,7 +848,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Core\pidctl\rtmodel.h</PathWithFileName>
+      <PathWithFileName>..\Core\PID_MODEL\rtmodel.h</PathWithFileName>
       <FilenameWithoutPath>rtmodel.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -860,8 +860,40 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Core\pidctl\rtwtypes.h</PathWithFileName>
+      <PathWithFileName>..\Core\PID_MODEL\rtwtypes.h</PathWithFileName>
       <FilenameWithoutPath>rtwtypes.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>libelybot_can</GroupName>
+    <tvExp>0</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>9</GroupNumber>
+      <FileNumber>39</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Core\livelybot\libelybot_can.c</PathWithFileName>
+      <FilenameWithoutPath>libelybot_can.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>9</GroupNumber>
+      <FileNumber>40</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Core\livelybot\libelybot_can.h</PathWithFileName>
+      <FilenameWithoutPath>libelybot_can.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

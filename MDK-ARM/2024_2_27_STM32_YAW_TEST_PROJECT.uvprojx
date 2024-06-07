@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,ARM_MATH_CM4</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Core/CALCULATE;../Core/bsp_can;../Core/logic;..\Core\pidctl</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Core/CALCULATE;../Core/bsp_can;../Core/logic;../Core/PID_MODEL;..\Core\livelybot</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -578,32 +578,47 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>pidctl</GroupName>
+          <GroupName>PID_MODEL</GroupName>
           <Files>
             <File>
-              <FileName>pidctl.c</FileName>
+              <FileName>PID_MODEL.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\pidctl\pidctl.c</FilePath>
+              <FilePath>..\Core\PID_MODEL\PID_MODEL.c</FilePath>
             </File>
             <File>
-              <FileName>pidctl.h</FileName>
+              <FileName>PID_MODEL_data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\PID_MODEL\PID_MODEL_data.c</FilePath>
+            </File>
+            <File>
+              <FileName>PID_MODEL.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Core\pidctl\pidctl.h</FilePath>
-            </File>
-            <File>
-              <FileName>pidctl_data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\pidctl\pidctl_data.c</FilePath>
+              <FilePath>..\Core\PID_MODEL\PID_MODEL.h</FilePath>
             </File>
             <File>
               <FileName>rtmodel.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Core\pidctl\rtmodel.h</FilePath>
+              <FilePath>..\Core\PID_MODEL\rtmodel.h</FilePath>
             </File>
             <File>
               <FileName>rtwtypes.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Core\pidctl\rtwtypes.h</FilePath>
+              <FilePath>..\Core\PID_MODEL\rtwtypes.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>libelybot_can</GroupName>
+          <Files>
+            <File>
+              <FileName>libelybot_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\livelybot\libelybot_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>libelybot_can.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\livelybot\libelybot_can.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -35,6 +35,6 @@
 2024_2_27_stm32_yaw_test_project\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 2024_2_27_stm32_yaw_test_project\calculate.o: ../Core/logic/logic.h
 2024_2_27_stm32_yaw_test_project\calculate.o: ../Core/bsp_can/bsp_can.h
-2024_2_27_stm32_yaw_test_project\calculate.o: ..\Core\pidctl\pidctl.h
-2024_2_27_stm32_yaw_test_project\calculate.o: ..\Core\pidctl\rtwtypes.h
+2024_2_27_stm32_yaw_test_project\calculate.o: ../Core/PID_MODEL/PID_MODEL.h
+2024_2_27_stm32_yaw_test_project\calculate.o: ../Core/PID_MODEL/rtwtypes.h
 2024_2_27_stm32_yaw_test_project\calculate.o: ../Core/Inc/tim.h

@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "pidctl.h"
+#include "PID_MODEL.h"
 #include "arm_math.h"
 #include "bsp_can.h"
 #include "CALCULATE.h"
@@ -173,6 +173,7 @@ float target_error[8]={0};
 //测试变量，用于看图像微调PID
 float test_target=0;
 
+uint16_t HT_moto_yaw=0;
 
 /* USER CODE END PD */
 
@@ -233,7 +234,7 @@ int main(void)
   MX_CAN1_Init();
   MX_CAN2_Init();
   /* USER CODE BEGIN 2 */
-	pidctl_initialize(); 
+	PID_MODEL_initialize(); 
 	
 	HAL_TIM_Base_Start_IT(&htim10); 
 	
@@ -272,18 +273,21 @@ int main(void)
 	rtP.DEADBAND_CH2_3 = 800;
 	rtP.DEADBAND_CH2_4 = 800;
 	rtP.TRANS_CH2_3  = 0.4;
-	rtP.TRANS_CH2_4  = 0.4;
+	rtP.TRANS_CH2_4  = 1.2;
 	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, servo_LO);  // 舵机松开
+	
 	HAL_Delay(500);
+	//YAW_TGT[M_3508] = 360;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  //执行逻辑改变
-	  LOGIC();
-	  HAL_Delay(100);
+
+
+	//   LOGIC();
+	//   HAL_Delay(100);
 
     /* USER CODE END WHILE */
 
@@ -346,28 +350,28 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		target_monitor();
 		/* 3508 */
 		ANG_TGT[M_3508]  = YAW_TGT[M_3508] * 3591 * 8191/(187 * 360) ;
-		rtU.yaw_status11    = 2 ;// ANG
-		rtU.yaw_target11    = ANG_TGT[M_3508];
-		rtU.yaw_circle11    = motor_data_can2[M_3508]->circle;
-		can_output[M_3508] = rtY.yaw_ANG_OUT11 ;
-		rtU.yaw_speed_rpm11 = motor_data_can2[M_3508]->speed_rpm;
-		rtU.yaw_ecd11       = motor_data_can2[M_3508]->ecd;
-		rtU.yaw_last_ecd11  = motor_data_can2[M_3508]->last_ecd;
+		rtU.yaw_status_CH2_3    = 2 ;// ANG
+		rtU.yaw_target_CH2_3    = ANG_TGT[M_3508];
+		rtU.yaw_circle_CH2_3    = motor_data_can2[M_3508]->circle;
+		can_output[M_3508] = rtY.yaw_ANG_OUT_CH2_3 ;
+		rtU.yaw_speed_rpm_CH2_3 = motor_data_can2[M_3508]->speed_rpm;
+		rtU.yaw_ecd_CH2_3       = motor_data_can2[M_3508]->ecd;
+		rtU.yaw_last_ecd_CH2_3  = motor_data_can2[M_3508]->last_ecd;
 		/* OUT PUT */	
-		motor_data_can2[M_3508]->circle = rtU.yaw_circle11;
+		motor_data_can2[M_3508]->circle = rtU.yaw_circle_CH2_3;
 		
 		
 		/* 2006 */
 		ANG_TGT[M_2006]  = YAW_TGT[M_2006] * 36 * 8191 * 2 /( 1 * 360) ;
-		rtU.yaw_status12    = 2 ;// ANG
-		rtU.yaw_target12    = ANG_TGT[M_2006];
-		rtU.yaw_circle12    = motor_data_can2[M_2006]->circle;
-		can_output[M_2006] = rtY.yaw_ANG_OUT12 ;
-		rtU.yaw_speed_rpm12 = motor_data_can2[M_2006]->speed_rpm;
-		rtU.yaw_ecd12       = motor_data_can2[M_2006]->ecd;
-		rtU.yaw_last_ecd12  = motor_data_can2[M_2006]->last_ecd;
+		rtU.yaw_status_CH2_4    = 2 ;// ANG
+		rtU.yaw_target_CH2_4    = ANG_TGT[M_2006];
+		rtU.yaw_circle_CH2_4    = motor_data_can2[M_2006]->circle;
+		can_output[M_2006] = rtY.yaw_ANG_OUT_CH2_4 ;
+		rtU.yaw_speed_rpm_CH2_4 = motor_data_can2[M_2006]->speed_rpm;
+		rtU.yaw_ecd_CH2_4       = motor_data_can2[M_2006]->ecd;
+		rtU.yaw_last_ecd_CH2_4  = motor_data_can2[M_2006]->last_ecd;
 		/* OUT PUT */	
-		motor_data_can2[M_2006]->circle = rtU.yaw_circle12;
+		motor_data_can2[M_2006]->circle = rtU.yaw_circle_CH2_4;
 		
 //		test_target=motor_data_can2[M_2006]->speed_rpm;
 //		test_target=((motor_data_can2[M_2006]->ecd)+(motor_data_can2[M_2006]->circle)*8191)*( 1 * 360)/(2 * 8191 * 36);
@@ -376,9 +380,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //			test_target=0;
 //		}
 		
-		pidctl_step();
+		PID_MODEL_step();
 		
-		CAN2_cmd_chassis(0,0,can_output[M_3508],can_output[M_2006],0,0,0,0);
+		CAN2_cmd_chassis(0,0,can_output[M_2006],can_output[M_2006],0,0,0,0,HT_moto_yaw);
 
 		motor_state_update_can2();
 

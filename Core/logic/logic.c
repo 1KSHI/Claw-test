@@ -43,7 +43,7 @@ void LOGIC(void)
 				//舵机动作完成
 				if (servo_FLAG == FINISH) {
 					//苗数量小于5时，允许执行夹操作
-					if(logic_change == PINCH && num_state<3) {
+					if(logic_change == PINCH && num_state<1) {
 						current_state = S_1;
 						num_state++;
 						Logic_FLAG=PINCH;
@@ -79,7 +79,7 @@ void LOGIC(void)
 				// 移动3508
 				else if (move_FLAG[M_2006] == FINISH && move_FLAG[M_3508] == FREE) {
 					HAL_Delay(Delay_Time);
-					YAW_TGT[M_3508] = 50;
+					YAW_TGT[M_3508] = 89;
 					move_FLAG[M_3508] = MOVE;
 				}
 			}
@@ -94,14 +94,14 @@ void LOGIC(void)
 //				case 2:
 //					TEMP_YAW_TGT_2006=H_2;
 //					break;
+//				case 1:
+//					TEMP_YAW_TGT_2006=H_3;
+//					break;
+//				case 2:
+//					TEMP_YAW_TGT_2006=H_4;
+//					break;
 				case 1:
-					TEMP_YAW_TGT_2006=H_3;
-					break;
-				case 2:
-					TEMP_YAW_TGT_2006=H_4;
-					break;
-				case 3:
-					TEMP_YAW_TGT_2006=H_5;
+					TEMP_YAW_TGT_2006=H_1;
 					break;
 			}
 			// 如果已经在S_1位置，转到S_2状态
@@ -183,14 +183,14 @@ void LOGIC(void)
 //			case 1:
 //				TEMP_YAW_TGT_2006=H_2;
 //				break;
+//			case 0:
+//				TEMP_YAW_TGT_2006=H_3;
+//				break;
+//			case 1:
+//				TEMP_YAW_TGT_2006=H_4;
+//				break;
 			case 0:
-				TEMP_YAW_TGT_2006=H_3;
-				break;
-			case 1:
-				TEMP_YAW_TGT_2006=H_4;
-				break;
-			case 2:
-				TEMP_YAW_TGT_2006=H_5;
+				TEMP_YAW_TGT_2006=H_1;
 				break;
 			}
 			// 如果已经在S_3位置，转到S_1状态
