@@ -27,6 +27,8 @@
 2024_2_27_stm32_yaw_test_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
+2024_2_27_stm32_yaw_test_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
+2024_2_27_stm32_yaw_test_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
@@ -34,6 +36,7 @@
 2024_2_27_stm32_yaw_test_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/Inc/can.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/Inc/dma.h
+2024_2_27_stm32_yaw_test_project\main.o: ../Core/Inc/i2c.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/Inc/tim.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/Inc/usart.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/Inc/gpio.h
@@ -45,5 +48,4 @@
 2024_2_27_stm32_yaw_test_project\main.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/bsp_can/bsp_can.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/CALCULATE/CALCULATE.h
-2024_2_27_stm32_yaw_test_project\main.o: ../Core/logic/logic.h
-2024_2_27_stm32_yaw_test_project\main.o: ..\Core\livelybot\libelybot_can.h
+2024_2_27_stm32_yaw_test_project\main.o: ..\Core\new_logic\new_logic.h

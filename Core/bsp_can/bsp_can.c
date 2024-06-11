@@ -3,7 +3,7 @@
 **/
 #include "bsp_can.h"
 #include "main.h"
-#include "libelybot_can.h"
+
 extern CAN_HandleTypeDef hcan1; //CAN串口1
 extern CAN_HandleTypeDef hcan2; //CAN串口2
 
@@ -182,7 +182,7 @@ void CAN1_cmd_chassis(int16_t motor1, int16_t motor2, int16_t motor3, int16_t mo
 }
 
 //CAN2数据输入
-void CAN2_cmd_chassis(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4, int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8,int16_t HT_moto)
+void CAN2_cmd_chassis(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4, int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8)
 {
   uint32_t send_mail_box;
   chassis_tx_message1.StdId = CAN_CHASSIS_ALL_ID;
@@ -214,7 +214,6 @@ void CAN2_cmd_chassis(int16_t motor1, int16_t motor2, int16_t motor3, int16_t mo
   chassis_can_send_data3[7] = motor8;
 
   HAL_CAN_AddTxMessage(&hcan2, &chassis_tx_message3, chassis_can_send_data3, &send_mail_box);
-  motor_control_pos_val_tqe(&hcan2, 1, HT_moto, 8000, 300);
 }
 
 //返回CAN1电机数据指针

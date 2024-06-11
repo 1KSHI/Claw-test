@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "bsp_can.h": "c"
+        "bsp_can.h": "c",
+        "calculate.h": "c",
+        "arm_math.h": "c",
+        "i2c.h": "c"
     }
 }

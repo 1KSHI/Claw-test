@@ -28,9 +28,10 @@
 2024_2_27_stm32_yaw_test_project\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 2024_2_27_stm32_yaw_test_project\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 2024_2_27_stm32_yaw_test_project\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
+2024_2_27_stm32_yaw_test_project\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
+2024_2_27_stm32_yaw_test_project\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 2024_2_27_stm32_yaw_test_project\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 2024_2_27_stm32_yaw_test_project\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 2024_2_27_stm32_yaw_test_project\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 2024_2_27_stm32_yaw_test_project\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 2024_2_27_stm32_yaw_test_project\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-2024_2_27_stm32_yaw_test_project\bsp_can.o: ..\Core\livelybot\libelybot_can.h

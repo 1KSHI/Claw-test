@@ -20,6 +20,7 @@
 #include "main.h"
 #include "can.h"
 #include "dma.h"
+#include "i2c.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -30,7 +31,7 @@
 #include "arm_math.h"
 #include "bsp_can.h"
 #include "CALCULATE.h"
-#include "logic.h"
+#include "new_logic.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,66 +53,6 @@ extern motor_measure_t *motor_data_can2[8];
   *
   ******************************************************************************
   */
-/*------------------------------------------------------------------------------
-	current_state
-	夹爪当前状态（S_0, S_1, S_2, S_3）
-	作用为改变夹爪位置
-	S_0 (3508:0mm    2006:10°            )
-	S_1 (3508:100mm  2006:65°/115°/165°)
-	S_2 (3508:90mm   2006:65°/115°/165°)
-	S_3 (3508:50mm   2006:65°/115°/165°)
-------------------------------------------------------------------------------*/
-enum State current_state = S_0;
-
-/*------------------------------------------------------------------------------
-	Logic_FLAG
-	当前电机逻辑标志（FREE, PINCH, PLACE）
-	作用为判断当前进行夹操作还是放操作
-------------------------------------------------------------------------------*/
-enum FLAG Logic_FLAG=FREE;
-
-/*------------------------------------------------------------------------------
-	move_FLAG
-	电机移动状态标志（FREE, MOVE, FINISH）
-	作用为监测电机是否到达目标
-------------------------------------------------------------------------------*/
-enum FLAG move_FLAG[8]={FREE,FREE};
-
-/*------------------------------------------------------------------------------
-	servo_FLAG
-	舵机状态标志（FREE, FINISH）
-	作用为判断舵机动作是否完成
-------------------------------------------------------------------------------*/
-enum FLAG servo_FLAG=FREE;
-
-/*------------------------------------------------------------------------------
-	num_state
-	存放数量（0, 1, 2, 3 ）
-	作用为记录当前存储的苗数量，对下一步操作逻辑进行改变
-------------------------------------------------------------------------------*/
-uint8_t num_state=0;
-
-/*------------------------------------------------------------------------------
-	TEMP_YAW_TGT_2006
-	在switch中改变2006角度
-------------------------------------------------------------------------------*/
-float TEMP_YAW_TGT_2006=0;
-
-/*------------------------------------------------------------------------------
-	motor_state
-	电机状态（1, 2）
-	改变电机环——SPD/ANG
-	（用于上电归零，现已不用）
-------------------------------------------------------------------------------*/
-//uint8_t motor_state[8]={0};
-
-/*------------------------------------------------------------------------------
-	logic_change
-	逻辑改变（PINCH, PLACE）
-	遥控器控制
-------------------------------------------------------------------------------*/
-enum FLAG logic_change = FREE;
-
 
 /*------------------------------------------------------------------------------
 	PID
@@ -175,6 +116,11 @@ float test_target=0;
 
 uint16_t HT_moto_yaw=0;
 
+
+uint8_t I2C_TRANS_FLAG;
+MotorExtentTypeDef motorExtent = {
+  .state = 0xab,
+};
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -233,6 +179,7 @@ int main(void)
   MX_TIM3_Init();
   MX_CAN1_Init();
   MX_CAN2_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 	PID_MODEL_initialize(); 
 	
@@ -272,9 +219,9 @@ int main(void)
 	//其他
 	rtP.DEADBAND_CH2_3 = 800;
 	rtP.DEADBAND_CH2_4 = 800;
-	rtP.TRANS_CH2_3  = 0.4;
-	rtP.TRANS_CH2_4  = 1.2;
-	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, servo_LO);  // 舵机松开
+	rtP.TRANS_CH2_3  = 0.3;
+	rtP.TRANS_CH2_4  = 0.3;
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // 舵机松开
 	
 	HAL_Delay(500);
 	//YAW_TGT[M_3508] = 360;
@@ -284,10 +231,27 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	if(I2C_TRANS_FLAG==1){
+	  while(HAL_I2C_Master_Transmit_DMA(&hi2c1, (uint16_t)I2C_SLAVE_ADDRESS, (uint8_t *)&motorExtent, sizeof(motorExtent))!= HAL_OK)
+      {
+        /* Error_Handler() function is called when Timeout error occurs.
+           When Acknowledge failure occurs (Slave don't acknowledge it's address)
+           Master restarts communication */
+        if (HAL_I2C_GetError(&hi2c1) != HAL_I2C_ERROR_AF)
+        {
+          Error_Handler();
+        }
+      }
+
+      while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY)
+      {
+      } 
+    I2C_TRANS_FLAG=0;
+  }
+   
 
 
 	//   LOGIC();
-	//   HAL_Delay(100);
 
     /* USER CODE END WHILE */
 
@@ -347,7 +311,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim == &htim10)
 	{
-		target_monitor();
+//		target_monitor();
 		/* 3508 */
 		ANG_TGT[M_3508]  = YAW_TGT[M_3508] * 3591 * 8191/(187 * 360) ;
 		rtU.yaw_status_CH2_3    = 2 ;// ANG
@@ -382,8 +346,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		
 		PID_MODEL_step();
 		
-		CAN2_cmd_chassis(0,0,can_output[M_2006],can_output[M_2006],0,0,0,0,HT_moto_yaw);
-
+		//CAN2_cmd_chassis(0,0,can_output[M_3508],0,0,0,0,0);
+		
 		motor_state_update_can2();
 
 	}

@@ -2,8 +2,7 @@
 #define CALCULATE_H
 
 #include "main.h"
-#include "logic.h"
-
+#include "new_logic.h"
 //重定义数组位
 #define LX_LSB      0
 #define LX_MSB      1
@@ -19,7 +18,7 @@
 #define RP_MSB      11
 #define BOT1        12
 #define BOT2        13
-
+extern uint8_t I2C_TRANS_FLAG;
 //重定义结构体
 typedef struct struct_message {
   uint8_t header;

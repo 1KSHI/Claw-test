@@ -92,19 +92,21 @@ void CAL_MESSAGE(void)
 			//按键更新
 			if((B1&0x01)==0&&(DataRe.data[BOT1]&0x01)==0x01)
 			{
-
-				logic_change=PINCH;
-
 				//按下按键1
+				I2C_TRANS_FLAG=1;
+				motorExtent.state = 0xab;
+
 			}
 			else if((B1&0x01)==0x01&&(DataRe.data[BOT1]&0x01)==0)
 			{
 				//松开按键1
+				
 			}
 			
 			if((B1&0x02)==0&&(DataRe.data[BOT1]&0x02)==0x02)
 			{
-				logic_change=PLACE;
+				I2C_TRANS_FLAG=1;
+				motorExtent.state = 0xcd;
 				//按下按键2
 			}
 			else if((B1&0x02)==0x02&&(DataRe.data[BOT1]&0x02)==0)
