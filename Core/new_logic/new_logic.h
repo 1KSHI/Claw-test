@@ -3,8 +3,8 @@
 #include "main.h"
 #include "i2c.h"
 
-#define M_2006 3
-#define M_3508 2
+#define M_2006 2
+#define M_3508 0
 
 typedef struct
 {

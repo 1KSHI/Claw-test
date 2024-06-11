@@ -35,6 +35,6 @@
 2024_2_27_stm32_yaw_test_project\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 2024_2_27_stm32_yaw_test_project\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 2024_2_27_stm32_yaw_test_project\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-2024_2_27_stm32_yaw_test_project\calculate.o: ..\Core\new_logic\new_logic.h
+2024_2_27_stm32_yaw_test_project\calculate.o: ../Core/new_logic/new_logic.h
 2024_2_27_stm32_yaw_test_project\calculate.o: ../Core/Inc/i2c.h
 2024_2_27_stm32_yaw_test_project\calculate.o: ../Core/Inc/tim.h

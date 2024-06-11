@@ -48,4 +48,4 @@
 2024_2_27_stm32_yaw_test_project\main.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/bsp_can/bsp_can.h
 2024_2_27_stm32_yaw_test_project\main.o: ../Core/CALCULATE/CALCULATE.h
-2024_2_27_stm32_yaw_test_project\main.o: ..\Core\new_logic\new_logic.h
+2024_2_27_stm32_yaw_test_project\main.o: ../Core/new_logic/new_logic.h

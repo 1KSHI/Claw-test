@@ -61,6 +61,7 @@ extern motor_measure_t *motor_data_can2[8];
 
 //目标角度
 float YAW_TGT[8] = {0};
+float M_3508_YAW_TGT=0;
 //目标速度
 //int SPD_TGT[8] = {0};//{-500,500}
 //计算后的角度
@@ -92,16 +93,20 @@ uint8_t FLAG=0;
 	用于监测遥控器传输数据
 ------------------------------------------------------------------------------*/
 //接收结构体
-DataPacket DataRe;
+DataPacket DataRe_ESP;
+DataPacket DataRe_LORA;
 //摇杆变量
-int16_t lx ,ly,rx,ry,lp,rp;
+int16_t lx_ESP ,ly_ESP,rx_ESP,ry_ESP,lp_ESP,rp_ESP;
+int16_t lx_LORA ,ly_LORA,rx_LORA,ry_LORA,lp_LORA,rp_LORA;
 //按键变量
-uint8_t B1,B2;
+uint8_t B1_ESP,B2_ESP;
+uint8_t B1_LORA,B2_LORA;
 //校验位
-uint8_t Cal_Parity;
+uint8_t Cal_Parity_ESP;
+uint8_t Cal_Parity_LORA;
 //FALG
-uint8_t USART_FLAG=0;
-
+uint8_t USART_FLAG_ESP=0;
+uint8_t USART_FLAG_LORA=0;
 	
 /*------------------------------------------------------------------------------
 	target_monitor变量
@@ -117,7 +122,12 @@ float test_target=0;
 uint16_t HT_moto_yaw=0;
 
 
-uint8_t I2C_TRANS_FLAG;
+uint8_t I2C_TRANS_FLAG=0;
+uint8_t M_3508_TRANS_FLAG=0;
+
+uint8_t GPIO_CHANGE_STATE_1;
+uint8_t GPIO_CHANGE_STATE_2;
+uint8_t GPIO_CHANGE_FLAG=0;
 MotorExtentTypeDef motorExtent = {
   .state = 0xab,
 };
@@ -180,6 +190,7 @@ int main(void)
   MX_CAN1_Init();
   MX_CAN2_Init();
   MX_I2C1_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 	PID_MODEL_initialize(); 
 	
@@ -192,8 +203,8 @@ int main(void)
 	HAL_CAN_Start(&hcan2); 
 	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
 	//DMA开始
-	HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe,1);
-	
+	HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP,1);
+	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA,1);
 	/*PID*/
 	
 	/*2006*/
@@ -221,35 +232,56 @@ int main(void)
 	rtP.DEADBAND_CH2_4 = 800;
 	rtP.TRANS_CH2_3  = 0.3;
 	rtP.TRANS_CH2_4  = 0.3;
-	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // 舵机松开
+	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // 舵机松开
 	
 	HAL_Delay(500);
-	//YAW_TGT[M_3508] = 360;
+	YAW_TGT[M_3508] = 120;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	if(I2C_TRANS_FLAG==1){
-	  while(HAL_I2C_Master_Transmit_DMA(&hi2c1, (uint16_t)I2C_SLAVE_ADDRESS, (uint8_t *)&motorExtent, sizeof(motorExtent))!= HAL_OK)
-      {
-        /* Error_Handler() function is called when Timeout error occurs.
-           When Acknowledge failure occurs (Slave don't acknowledge it's address)
-           Master restarts communication */
-        if (HAL_I2C_GetError(&hi2c1) != HAL_I2C_ERROR_AF)
+    if(I2C_TRANS_FLAG==1){
+      while(HAL_I2C_Master_Transmit_DMA(&hi2c1, (uint16_t)I2C_SLAVE_ADDRESS, (uint8_t *)&motorExtent, sizeof(motorExtent))!= HAL_OK)
         {
-          Error_Handler();
+          /* Error_Handler() function is called when Timeout error occurs.
+            When Acknowledge failure occurs (Slave don't acknowledge it's address)
+            Master restarts communication */
+          if (HAL_I2C_GetError(&hi2c1) != HAL_I2C_ERROR_AF)
+          {
+            Error_Handler();
+          }
         }
-      }
 
-      while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY)
-      {
-      } 
-    I2C_TRANS_FLAG=0;
-  }
-   
+        while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY)
+        {
+        } 
+      I2C_TRANS_FLAG=0;
+    }
 
+    if(M_3508_TRANS_FLAG==1){
+      YAW_TGT[M_3508] = M_3508_YAW_TGT;
+      M_3508_TRANS_FLAG=0;
+    }
+
+    switch(GPIO_CHANGE_FLAG){
+      case 1:
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+        break;
+      case 2:
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+        break;
+      case 3:
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+        break;
+      case 4:
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+        break;
+      default:
+        break;
+    }
+	HAL_Delay(100);
 
 	//   LOGIC();
 
@@ -346,7 +378,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		
 		PID_MODEL_step();
 		
-		//CAN2_cmd_chassis(0,0,can_output[M_3508],0,0,0,0,0);
+		CAN2_cmd_chassis(can_output[M_3508],0,0,0,0,0,0,0);
 		
 		motor_state_update_can2();
 
@@ -358,33 +390,62 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		if (huart->Instance == USART3)
     {
-		if(DataRe.header==0xAA && USART_FLAG==0)
-		{
-			CAL_MESSAGE();
-			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe+1, sizeof(DataPacket)-1);
-			USART_FLAG=1;
-		}
-		if(DataRe.header==0xAA && USART_FLAG==1)
-		{
-			CAL_MESSAGE();
-			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, sizeof(DataPacket));
-		}
+		  if(DataRe_ESP.header==0xAA && USART_FLAG_ESP==0)
+		  {
+		  	CAL_MESSAGE_ESP();
+		  	HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP+1, sizeof(DataPacket)-1);
+		  	USART_FLAG_ESP=1;
+		  }
+		  if(DataRe_ESP.header==0xAA && USART_FLAG_ESP==1)
+		  {
+		  	CAL_MESSAGE_ESP();
+		  	HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP, sizeof(DataPacket));
+		  }
 		else
 		{
-			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
-			USART_FLAG=0;
-		}				
-	}
+			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP, 1);
+			USART_FLAG_ESP=0;
+		}			
+    }
+      //LORA
+    if (huart->Instance == USART2)
+    {
+		  if(DataRe_LORA.header==0xAA && USART_FLAG_LORA==0)
+		  {
+		  	CAL_MESSAGE_LORA();
+		  	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA+1, sizeof(DataPacket)-1);
+		  	USART_FLAG_LORA=1;
+		  }
+		  if(DataRe_LORA.header==0xAA && USART_FLAG_LORA==1)
+		  {
+		  	CAL_MESSAGE_LORA();
+		  	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA, sizeof(DataPacket));
+		  }
+		  else
+		  {
+		  	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA, 1);
+		  	USART_FLAG_LORA=0;
+		  }		
+	  }
 }
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART3)
     {
-		HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe, 1);
-		USART_FLAG=0;
+		  HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP, 1);
+		  USART_FLAG_ESP=0;
+    }
+
+    if (huart->Instance == USART2)
+    {
+		  HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA, 1);
+		  USART_FLAG_LORA=0;
     }
 }
+
+
+
 
 /* USER CODE END 4 */
 

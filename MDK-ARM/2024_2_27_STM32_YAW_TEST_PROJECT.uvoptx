@@ -223,32 +223,42 @@
         <Ww>
           <count>0</count>
           <WinNumber>2</WinNumber>
-          <ItemText>DataRe</ItemText>
+          <ItemText>DataRe_LORA</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>2</WinNumber>
-          <ItemText>B1</ItemText>
+          <ItemText>B1_LORA</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>2</WinNumber>
-          <ItemText>current_target,0x0A</ItemText>
+          <ItemText>DataRe_ESP</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ANG_TGT,0x0A</ItemText>
+          <ItemText>B1_ESP</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>2</WinNumber>
-          <ItemText>motorExtent</ItemText>
+          <ItemText>ANG_TGT</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>2</WinNumber>
-          <ItemText>I2C_TRANS_FLAG</ItemText>
+          <ItemText>motor_data_can2</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>B2_ESP</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>GPIO_CHANGE_FLAG</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>
