@@ -23,9 +23,6 @@ extern uint8_t I2C_TRANS_FLAG;
 extern uint8_t M_3508_TRANS_FLAG;
 extern uint8_t GPIO_CHANGE_FLAG;
 
-extern uint8_t GPIO_CHANGE_STATE_1;
-extern uint8_t GPIO_CHANGE_STATE_2;
-
 extern float M_3508_YAW_TGT;
 //重定义结构体
 typedef struct struct_message {
@@ -44,14 +41,14 @@ extern uint8_t B1_ESP,B2_ESP;
 //校验位
 extern uint8_t Cal_Parity_ESP;
 
-//接收结构体
-extern DataPacket DataRe_LORA;
-//摇杆变量
-extern int16_t lx_LORA ,ly_LORA,rx_LORA,ry_LORA,lp_LORA,rp_LORA;
-//按键变量
-extern uint8_t B1_LORA,B2_LORA;
-//校验位
-extern uint8_t Cal_Parity_LORA;
+// //接收结构体
+// extern DataPacket DataRe_LORA;
+// //摇杆变量
+// extern int16_t lx_LORA ,ly_LORA,rx_LORA,ry_LORA,lp_LORA,rp_LORA;
+// //按键变量
+// extern uint8_t B1_LORA,B2_LORA;
+// //校验位
+// extern uint8_t Cal_Parity_LORA;
 
 
 // 当前状态

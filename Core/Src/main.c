@@ -46,62 +46,62 @@ extern motor_measure_t *motor_data_can2[8];
   ******************************************************************************
   * @attention
   *
-  *	ÉÏµçÇ°×¢ÒâÊÂÏî£¨µç»úID¶¨ÒåÔÚlogic.hÖÐ£©
+  *	ï¿½Ïµï¿½Ç°×¢ï¿½ï¿½ï¿½ï¿½ï¿½î£¨ï¿½ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½logic.hï¿½Ð£ï¿½
   *
-  *	2006µçµ÷±àºÅÎª4
-  *	3508µçµ÷±àºÅÎª3
+  *	2006ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª4
+  *	3508ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª3
   *
   ******************************************************************************
   */
 
 /*------------------------------------------------------------------------------
 	PID
-	PIDÊý¾Ý
+	PIDï¿½ï¿½ï¿½ï¿½
 ------------------------------------------------------------------------------*/
 
-//Ä¿±ê½Ç¶È
+//Ä¿ï¿½ï¿½Ç¶ï¿½
 float YAW_TGT[8] = {0};
 float M_3508_YAW_TGT=0;
-//Ä¿±êËÙ¶È
-//int SPD_TGT[8] = {0};//{-500,500}
-//¼ÆËãºóµÄ½Ç¶È
+//Ä¿ï¿½ï¿½ï¿½Ù¶ï¿½
+float SPD_TGT[8] = {0};//{-500,500}
+//ï¿½ï¿½ï¿½ï¿½ï¿½Ä½Ç¶ï¿½
 float ANG_TGT[8] = {0};
-//µ±Ç°½Ç¶È
+//ï¿½ï¿½Ç°ï¿½Ç¶ï¿½
 float current_ang=0;
-//canÊä³öÊýÖµ
+//canï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 int can_output[8] = {0};
-//±êÖ¾Î»
+//ï¿½ï¿½Ö¾Î»
 uint8_t FLAG=0;
 
 /*------------------------------------------------------------------------------
-	Îó²î¼à²â
-	ÓÃÓÚÉÏµç¹éÁã³õÊ¼»¯
-	£¨´ýµ÷ÊÔ£¬ÏÖÒÑ²»ÓÃ£©
+	ï¿½ï¿½ï¿½ï¿½ï¿½
+	ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
+	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½Ñ²ï¿½ï¿½Ã£ï¿½
 ------------------------------------------------------------------------------*/
-////RESETÁãµã
+////RESETï¿½ï¿½ï¿½
 //float ZERO_POINT[8] ={0};
-////¶Â×ª¿ªÊ¼ºÍ½áÊøµÄ·µ»Ø½Ç¶ÈÓÚÈ¦Êý£¨¼ä¸ôÊ±¼ä1s£©
+////ï¿½ï¿½×ªï¿½ï¿½Ê¼ï¿½Í½ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½Ø½Ç¶ï¿½ï¿½ï¿½È¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½1sï¿½ï¿½
 //float STL_BGN_ANG[8]={0,0},STL_END_ANG[8]={0,0};
-////¶Â×ªÎó²î
+////ï¿½ï¿½×ªï¿½ï¿½ï¿½
 //int stl_error[8]={0};
-////¶Â×ªÊ±¼ä¼ÆÊýÆ÷
+////ï¿½ï¿½×ªÊ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //int stl_counter[8]={0};
 //uint8_t init_FLAG[8]={0};
 
 /*------------------------------------------------------------------------------
-	Ò£¿ØÆ÷±äÁ¿
-	ÓÃÓÚ¼à²âÒ£¿ØÆ÷´«ÊäÊý¾Ý
+	Ò£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½Ò£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 ------------------------------------------------------------------------------*/
-//½ÓÊÕ½á¹¹Ìå
+//ï¿½ï¿½ï¿½Õ½á¹¹ï¿½ï¿½
 DataPacket DataRe_ESP;
 DataPacket DataRe_LORA;
-//Ò¡¸Ë±äÁ¿
+//Ò¡ï¿½Ë±ï¿½ï¿½ï¿½
 int16_t lx_ESP ,ly_ESP,rx_ESP,ry_ESP,lp_ESP,rp_ESP;
 int16_t lx_LORA ,ly_LORA,rx_LORA,ry_LORA,lp_LORA,rp_LORA;
-//°´¼ü±äÁ¿
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 uint8_t B1_ESP,B2_ESP;
 uint8_t B1_LORA,B2_LORA;
-//Ð£ÑéÎ»
+//Ð£ï¿½ï¿½Î»
 uint8_t Cal_Parity_ESP;
 uint8_t Cal_Parity_LORA;
 //FALG
@@ -109,19 +109,20 @@ uint8_t USART_FLAG_ESP=0;
 uint8_t USART_FLAG_LORA=0;
 	
 /*------------------------------------------------------------------------------
-	target_monitor±äÁ¿
-	ÓÃÓÚÅÐ¶Ïµç»úÊÇ·ñµ½´ïÄ¿±ê½Ç¶È
+	target_monitorï¿½ï¿½ï¿½ï¿½
+	ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ïµï¿½ï¿½ï¿½Ç·ñµ½´ï¿½Ä¿ï¿½ï¿½Ç¶ï¿½
 ------------------------------------------------------------------------------*/
-//µ±Ç°½Ç¶È
+//ï¿½ï¿½Ç°ï¿½Ç¶ï¿½
 float current_target[8]={0};
-//½Ç¶ÈÎó²î
+//ï¿½Ç¶ï¿½ï¿½ï¿½ï¿½
 float target_error[8]={0};
-//²âÊÔ±äÁ¿£¬ÓÃÓÚ¿´Í¼ÏñÎ¢µ÷PID
+//ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½Í¼ï¿½ï¿½Î¢ï¿½ï¿½PID
 float test_target=0;
 
 uint16_t HT_moto_yaw=0;
 
-
+uint8_t LOGIC_FLAG=0;
+uint8_t logic_state=0;
 uint8_t I2C_TRANS_FLAG=0;
 uint8_t M_3508_TRANS_FLAG=0;
 
@@ -196,26 +197,29 @@ int main(void)
 	
 	HAL_TIM_Base_Start_IT(&htim10); 
 	
-	//PWM¿ªÊ¼
+	//PWMï¿½ï¿½Ê¼
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
-	//CAN³õÊ¼»¯
+	//CANï¿½ï¿½Ê¼ï¿½ï¿½
 	can_filter_init();
 	HAL_CAN_Start(&hcan2); 
 	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
-	//DMA¿ªÊ¼
+	//DMAï¿½ï¿½Ê¼
 	HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP,1);
 	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA,1);
 	/*PID*/
 	
 	/*2006*/
 	//SPD 
-	rtP.ANG_S_P_CH2_4 = 0.6901*0.7 ;
-	rtP.ANG_S_I_CH2_4 = 2.3727*0.11;
-	rtP.ANG_S_D_CH2_4 = 0.0126;
-	//ANG
-	rtP.ANG_A_P_CH2_4 = 0.83005*0.6 ;
-	rtP.ANG_A_I_CH2_4 = 0.38548*0.02 ;
-	rtP.ANG_A_D_CH2_4 = 0.051858 ;
+  rtP.SPD_P_CH2_4 = 0.6901*3 ;
+  rtP.SPD_I_CH2_4 = 2.3727*0.8;
+  rtP.SPD_D_CH2_4 = 0.0126;
+	// rtP.ANG_S_P_CH2_4 = 0.6901*0.7 ;
+	// rtP.ANG_S_I_CH2_4 = 2.3727*0.11;
+	// rtP.ANG_S_D_CH2_4 = 0.0126;
+	// //ANG
+	// rtP.ANG_A_P_CH2_4 = 0.83005*0.6 ;
+	// rtP.ANG_A_I_CH2_4 = 0.38548*0.02 ;
+	// rtP.ANG_A_D_CH2_4 = 0.051858 ;
 	
 	/*3508*/
 	//SPD 
@@ -227,22 +231,22 @@ int main(void)
 	rtP.ANG_A_I_CH2_3 = 0.38548*0.02 ;
 	rtP.ANG_A_D_CH2_3 = 0.04 ;
 
-	//ÆäËû
+	//ï¿½ï¿½ï¿½ï¿½
 	rtP.DEADBAND_CH2_3 = 800;
 	rtP.DEADBAND_CH2_4 = 800;
 	rtP.TRANS_CH2_3  = 0.3;
-	rtP.TRANS_CH2_4  = 0.3;
-	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // ¶æ»úËÉ¿ª
+	rtP.TRANS_CH2_4  = 1;
+	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // ï¿½ï¿½ï¿½ï¿½É¿ï¿½
 	
 	HAL_Delay(500);
-	YAW_TGT[M_3508] = 120;
+	SPD_TGT[M_2006] = 3500;
+  motorExtent.state = 0xab;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if(I2C_TRANS_FLAG==1){
       while(HAL_I2C_Master_Transmit_DMA(&hi2c1, (uint16_t)I2C_SLAVE_ADDRESS, (uint8_t *)&motorExtent, sizeof(motorExtent))!= HAL_OK)
         {
           /* Error_Handler() function is called when Timeout error occurs.
@@ -257,31 +261,47 @@ int main(void)
         while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY)
         {
         } 
-      I2C_TRANS_FLAG=0;
-    }
+        motorExtent.state = 0xcd;
+        HAL_Delay(5000);
+        while(HAL_I2C_Master_Transmit_DMA(&hi2c1, (uint16_t)I2C_SLAVE_ADDRESS, (uint8_t *)&motorExtent, sizeof(motorExtent))!= HAL_OK)
+        {
+          /* Error_Handler() function is called when Timeout error occurs.
+            When Acknowledge failure occurs (Slave don't acknowledge it's address)
+            Master restarts communication */
+          if (HAL_I2C_GetError(&hi2c1) != HAL_I2C_ERROR_AF)
+          {
+            Error_Handler();
+          }
+        }
 
-    if(M_3508_TRANS_FLAG==1){
-      YAW_TGT[M_3508] = M_3508_YAW_TGT;
-      M_3508_TRANS_FLAG=0;
-    }
+        while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY)
+        {
+        } 
+        motorExtent.state = 0xab;
+        HAL_Delay(5000);
 
-    switch(GPIO_CHANGE_FLAG){
-      case 1:
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
-        break;
-      case 2:
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
-        break;
-      case 3:
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-        break;
-      case 4:
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-        break;
-      default:
-        break;
-    }
-	HAL_Delay(100);
+    // if(M_3508_TRANS_FLAG==1){
+    //   YAW_TGT[M_3508] = M_3508_YAW_TGT;
+    //   M_3508_TRANS_FLAG=0;
+    // }
+
+    // switch(GPIO_CHANGE_FLAG){
+    //   case 1:
+    //     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+    //     break;
+    //   case 2:
+    //     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+    //     break;
+    //   case 3:
+    //     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+    //     break;
+    //   case 4:
+    //     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+    //     break;
+    //   default:
+    //     break;
+    // }
+
 
 	//   LOGIC();
 
@@ -343,7 +363,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim == &htim10)
 	{
-//		target_monitor();
+//		target_monitor(); 
 		/* 3508 */
 		ANG_TGT[M_3508]  = YAW_TGT[M_3508] * 3591 * 8191/(187 * 360) ;
 		rtU.yaw_status_CH2_3    = 2 ;// ANG
@@ -359,10 +379,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		
 		/* 2006 */
 		ANG_TGT[M_2006]  = YAW_TGT[M_2006] * 36 * 8191 * 2 /( 1 * 360) ;
-		rtU.yaw_status_CH2_4    = 2 ;// ANG
-		rtU.yaw_target_CH2_4    = ANG_TGT[M_2006];
+		rtU.yaw_status_CH2_4    = 1 ;// ANG
+		rtU.yaw_target_CH2_4    = SPD_TGT[M_2006];
 		rtU.yaw_circle_CH2_4    = motor_data_can2[M_2006]->circle;
-		can_output[M_2006] = rtY.yaw_ANG_OUT_CH2_4 ;
+		can_output[M_2006] = rtY.yaw_SPD_OUT_CH2_4 ;
 		rtU.yaw_speed_rpm_CH2_4 = motor_data_can2[M_2006]->speed_rpm;
 		rtU.yaw_ecd_CH2_4       = motor_data_can2[M_2006]->ecd;
 		rtU.yaw_last_ecd_CH2_4  = motor_data_can2[M_2006]->last_ecd;
@@ -378,7 +398,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		
 		PID_MODEL_step();
 		
-		CAN2_cmd_chassis(can_output[M_3508],0,0,0,0,0,0,0);
+		CAN2_cmd_chassis(can_output[M_3508],can_output[M_2006],0,0,0,0,0,0);
 		
 		motor_state_update_can2();
 
@@ -386,7 +406,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	
 }
 
-//Ò£¿ØÆ÷²¿·Ö
+//Ò£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		if (huart->Instance == USART3)
     {
@@ -396,37 +416,37 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		  	HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP+1, sizeof(DataPacket)-1);
 		  	USART_FLAG_ESP=1;
 		  }
-		  if(DataRe_ESP.header==0xAA && USART_FLAG_ESP==1)
+		  else if(DataRe_ESP.header==0xAA && USART_FLAG_ESP==1)
 		  {
 		  	CAL_MESSAGE_ESP();
 		  	HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP, sizeof(DataPacket));
 		  }
-		else
-		{
-			HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP, 1);
-			USART_FLAG_ESP=0;
-		}			
+      else
+      {
+        HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP, 1);
+        USART_FLAG_ESP=0;
+      }			
     }
-      //LORA
-    if (huart->Instance == USART2)
-    {
-		  if(DataRe_LORA.header==0xAA && USART_FLAG_LORA==0)
-		  {
-		  	CAL_MESSAGE_LORA();
-		  	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA+1, sizeof(DataPacket)-1);
-		  	USART_FLAG_LORA=1;
-		  }
-		  if(DataRe_LORA.header==0xAA && USART_FLAG_LORA==1)
-		  {
-		  	CAL_MESSAGE_LORA();
-		  	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA, sizeof(DataPacket));
-		  }
-		  else
-		  {
-		  	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA, 1);
-		  	USART_FLAG_LORA=0;
-		  }		
-	  }
+    //   //LORA
+    // if (huart->Instance == USART2)
+    // {
+		//   if(DataRe_LORA.header==0xAA && USART_FLAG_LORA==0)
+		//   {
+		//   	CAL_MESSAGE_LORA();
+		//   	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA+1, sizeof(DataPacket)-1);
+		//   	USART_FLAG_LORA=1;
+		//   }
+		//   if(DataRe_LORA.header==0xAA && USART_FLAG_LORA==1)
+		//   {
+		//   	CAL_MESSAGE_LORA();
+		//   	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA, sizeof(DataPacket));
+		//   }
+		//   else
+		//   {
+		//   	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA, 1);
+		//   	USART_FLAG_LORA=0;
+		//   }		
+	  // }
 }
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
@@ -437,11 +457,11 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 		  USART_FLAG_ESP=0;
     }
 
-    if (huart->Instance == USART2)
-    {
-		  HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA, 1);
-		  USART_FLAG_LORA=0;
-    }
+    // if (huart->Instance == USART2)
+    // {
+		//   HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA, 1);
+		//   USART_FLAG_LORA=0;
+    // }
 }
 
 

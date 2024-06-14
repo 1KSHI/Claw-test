@@ -151,52 +151,52 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>rtU</ItemText>
+          <ItemText>DataRe</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>DataRe</ItemText>
+          <ItemText>a</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>a</ItemText>
+          <ItemText>lx,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>lx,0x0A</ItemText>
+          <ItemText>ly,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ly,0x0A</ItemText>
+          <ItemText>rx,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>rx,0x0A</ItemText>
+          <ItemText>ry,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ry,0x0A</ItemText>
+          <ItemText>lp,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>lp,0x0A</ItemText>
+          <ItemText>rp,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>rp,0x0A</ItemText>
+          <ItemText>B1</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>B1</ItemText>
+          <ItemText>DataRe</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
@@ -211,11 +211,6 @@
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>DataRe</ItemText>
-        </Ww>
-        <Ww>
-          <count>13</count>
-          <WinNumber>1</WinNumber>
           <ItemText>motor_data,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
@@ -223,42 +218,7 @@
         <Ww>
           <count>0</count>
           <WinNumber>2</WinNumber>
-          <ItemText>DataRe_LORA</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>B1_LORA</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>DataRe_ESP</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>B1_ESP</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>ANG_TGT</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>motor_data_can2</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>B2_ESP</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>GPIO_CHANGE_FLAG</ItemText>
+          <ItemText>motorExtent</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>
