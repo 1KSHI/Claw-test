@@ -59,35 +59,24 @@ void handle_PLACE_SERVO_OFF(void){
 
 void handle_HIGH_TORQUE(uint8_t *motorExtent){
     //I2C_TRANS
-    while(HAL_I2C_Master_Transmit_DMA(&hi2c1, (uint16_t)I2C_SLAVE_ADDRESS, motorExtent, sizeof(motorExtent))!= HAL_OK)
-    {
-        /* Error_Handler() function is called when Timeout error occurs.
-        When Acknowledge failure occurs (Slave don't acknowledge it's address)
-        Master restarts communication */
-        if (HAL_I2C_GetError(&hi2c1) != HAL_I2C_ERROR_AF)
-        {
-        Error_Handler();
-        }
-    }
-
-    while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY)
-    {
-    } 
+    
 }
 
 
 
 void task_yaw_catch(void){
-    HAL_Delay(500);
-    handle_FRONT_CATCH_SERVO_ON();
-    HAL_Delay(1000);
-    handle_M_3508_UP();
-    HAL_Delay(2000);
+    
+    motorExtent.state = 0xab;
+    HIGH_TROQUE_TRANS_FLAG=1;
+    HAL_Delay(5000);
+    YAW_TGT[M_3508] = 120;
+    HAL_Delay(5000);
+    YAW_TGT[M_3508] = 900;
+    HAL_Delay(5000);
     motorExtent.state = 0xcd;
-    handle_HIGH_TORQUE((uint8_t *)&motorExtent);
-    HAL_Delay(2000);
-    handle_FRONT_CATCH_SERVO_OFF();
-    HAL_Delay(500);
+    HIGH_TROQUE_TRANS_FLAG=1;
+    HAL_Delay(5000);
+    
 }
 
 void task_yaw_replace(void){

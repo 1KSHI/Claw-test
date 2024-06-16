@@ -10,7 +10,7 @@ typedef struct
 {
   uint8_t state;
 } MotorExtentTypeDef;
-
+extern uint8_t HIGH_TROQUE_TRANS_FLAG;
 extern MotorExtentTypeDef motorExtent;
 extern float YAW_TGT[8];
 extern uint8_t LOGIC_FLAG;

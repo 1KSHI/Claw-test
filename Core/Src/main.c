@@ -59,7 +59,7 @@ extern motor_measure_t *motor_data_can2[8];
 	PID����
 ------------------------------------------------------------------------------*/
 
-//Ŀ��Ƕ�
+//Ŀ��Ƕ�???
 float YAW_TGT[8] = {0};
 float M_3508_YAW_TGT=0;
 //Ŀ���ٶ�
@@ -68,29 +68,29 @@ float SPD_TGT[8] = {0};//{-500,500}
 float ANG_TGT[8] = {0};
 //��ǰ�Ƕ�
 float current_ang=0;
-//can�����ֵ
+//can������?
 int can_output[8] = {0};
 //��־λ
 uint8_t FLAG=0;
 
 /*------------------------------------------------------------------------------
-	�����
+	�����???
 	�����ϵ�����ʼ��
 	�������ԣ����Ѳ��ã�
 ------------------------------------------------------------------------------*/
-////RESET���
+////RESET���???
 //float ZERO_POINT[8] ={0};
-////��ת��ʼ�ͽ����ķ��ؽǶ���Ȧ�������ʱ��1s��
+////��ת��ʼ�ͽ����ķ��ؽǶ���Ȧ�������ʱ��???1s��
 //float STL_BGN_ANG[8]={0,0},STL_END_ANG[8]={0,0};
-////��ת���
+////��ת���???
 //int stl_error[8]={0};
-////��תʱ�������
+////��תʱ�������???
 //int stl_counter[8]={0};
 //uint8_t init_FLAG[8]={0};
 
 /*------------------------------------------------------------------------------
 	ң��������
-	���ڼ��ң������������
+	���ڼ��ң������������???
 ------------------------------------------------------------------------------*/
 //���սṹ��
 DataPacket DataRe_ESP;
@@ -114,7 +114,7 @@ uint8_t USART_FLAG_LORA=0;
 ------------------------------------------------------------------------------*/
 //��ǰ�Ƕ�
 float current_target[8]={0};
-//�Ƕ����
+//�Ƕ����???
 float target_error[8]={0};
 //���Ա��������ڿ�ͼ��΢��PID
 float test_target=0;
@@ -125,6 +125,7 @@ uint8_t LOGIC_FLAG=0;
 uint8_t logic_state=0;
 uint8_t I2C_TRANS_FLAG=0;
 uint8_t M_3508_TRANS_FLAG=0;
+uint8_t HIGH_TROQUE_TRANS_FLAG=0;
 
 uint8_t GPIO_CHANGE_STATE_1;
 uint8_t GPIO_CHANGE_STATE_2;
@@ -234,12 +235,12 @@ int main(void)
 	//����
 	rtP.DEADBAND_CH2_3 = 800;
 	rtP.DEADBAND_CH2_4 = 800;
-	rtP.TRANS_CH2_3  = 0.3;
-	rtP.TRANS_CH2_4  = 1;
-	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // ����ɿ�
+	rtP.TRANS_CH2_3  = 0.1;
+	rtP.TRANS_CH2_4  = 0.1;
+	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // ����ɿ�???
 	
 	HAL_Delay(500);
-	SPD_TGT[M_2006] = 3500;
+	YAW_TGT[M_3508] = 120;
   motorExtent.state = 0xab;
   /* USER CODE END 2 */
 
@@ -247,38 +248,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      while(HAL_I2C_Master_Transmit_DMA(&hi2c1, (uint16_t)I2C_SLAVE_ADDRESS, (uint8_t *)&motorExtent, sizeof(motorExtent))!= HAL_OK)
-        {
-          /* Error_Handler() function is called when Timeout error occurs.
-            When Acknowledge failure occurs (Slave don't acknowledge it's address)
-            Master restarts communication */
-          if (HAL_I2C_GetError(&hi2c1) != HAL_I2C_ERROR_AF)
-          {
-            Error_Handler();
-          }
-        }
-
-        while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY)
-        {
-        } 
-        motorExtent.state = 0xcd;
-        HAL_Delay(5000);
-        while(HAL_I2C_Master_Transmit_DMA(&hi2c1, (uint16_t)I2C_SLAVE_ADDRESS, (uint8_t *)&motorExtent, sizeof(motorExtent))!= HAL_OK)
-        {
-          /* Error_Handler() function is called when Timeout error occurs.
-            When Acknowledge failure occurs (Slave don't acknowledge it's address)
-            Master restarts communication */
-          if (HAL_I2C_GetError(&hi2c1) != HAL_I2C_ERROR_AF)
-          {
-            Error_Handler();
-          }
-        }
-
-        while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY)
-        {
-        } 
-        motorExtent.state = 0xab;
-        HAL_Delay(5000);
+    
+    task_yaw_catch();
 
     // if(M_3508_TRANS_FLAG==1){
     //   YAW_TGT[M_3508] = M_3508_YAW_TGT;
@@ -361,8 +332,24 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+
 	if(htim == &htim10)
 	{
+    if(HIGH_TROQUE_TRANS_FLAG){
+      if(HAL_I2C_Master_Transmit_DMA(&hi2c1, (uint16_t)I2C_SLAVE_ADDRESS, (uint8_t *)&motorExtent, sizeof(motorExtent))!= HAL_OK)
+      {
+        /* Error_Handler() function is called when Timeout error occurs.
+          When Acknowledge failure occurs (Slave don't acknowledge it's address)
+          Master restarts communication */
+        if (HAL_I2C_GetError(&hi2c1) != HAL_I2C_ERROR_AF)
+        {
+          Error_Handler();
+        }
+      }else{
+        HIGH_TROQUE_TRANS_FLAG=0;
+      }
+      
+    }
 //		target_monitor(); 
 		/* 3508 */
 		ANG_TGT[M_3508]  = YAW_TGT[M_3508] * 3591 * 8191/(187 * 360) ;
