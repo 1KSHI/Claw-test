@@ -1,5 +1,8 @@
 #include "new_logic.h"
 #include "i2c.h"
+
+
+
 ///
 void handle_M_3508_UP(void){
     //ANG_TAG
@@ -89,6 +92,18 @@ void init(void){
 void close(void){
 
 }
+
+func_ptr func_table[] = {
+    init,
+    task_yaw_catch,
+    task_yaw_replace,
+    handle_TRANS_ON,
+    handle_TRANS_OFF,
+    handle_PLACE_SERVO_ON,
+    handle_PLACE_SERVO_OFF,
+    close
+};
+
 
 void LOGIC(void){
     if(LOGIC_FLAG){

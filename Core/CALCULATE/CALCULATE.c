@@ -128,8 +128,8 @@ void CAL_MESSAGE_ESP(void)
 			if((B1_ESP&0x01)==0&&(DataRe_ESP.data[BOT1]&0x01)==0x01)
 			{
 				//按下按键1
-				I2C_TRANS_FLAG=1;
-				motorExtent.state = 0xab;
+				LOGIC_FLAG=1;
+				next_state=1;
 
 			}
 			else if((B1_ESP&0x01)==0x01&&(DataRe_ESP.data[BOT1]&0x01)==0)
@@ -140,8 +140,8 @@ void CAL_MESSAGE_ESP(void)
 			
 			if((B1_ESP&0x02)==0&&(DataRe_ESP.data[BOT1]&0x02)==0x02)
 			{
-				I2C_TRANS_FLAG=1;
-				motorExtent.state = 0xcd;
+				LOGIC_FLAG=1;
+				next_state=2;
 				//按下按键2
 			}
 			else if((B1_ESP&0x02)==0x02&&(DataRe_ESP.data[BOT1]&0x02)==0)
@@ -151,8 +151,6 @@ void CAL_MESSAGE_ESP(void)
 			
 			if((B1_ESP&0x04)==0&&(DataRe_ESP.data[BOT1]&0x04)==0x04)
 			{
-				M_3508_TRANS_FLAG=1;
-				M_3508_YAW_TGT=720;
 				//按下按键3
 			}
 			else if((B1_ESP&0x04)==0x04&&(DataRe_ESP.data[BOT1]&0x04)==0)
@@ -162,8 +160,6 @@ void CAL_MESSAGE_ESP(void)
 			
 			if((B1_ESP&0x08)==0&&(DataRe_ESP.data[BOT1]&0x08)==0x08)
 			{
-				M_3508_TRANS_FLAG=1;
-				M_3508_YAW_TGT=120;
 				//按下按键4
 			}
 			else if((B1_ESP&0x08)==0x08&&(DataRe_ESP.data[BOT1]&0x08)==0)
@@ -213,12 +209,10 @@ void CAL_MESSAGE_ESP(void)
 			if((B2_ESP&0x01)==0&&(DataRe_ESP.data[BOT2]&0x01)==0x01)
 			{
 				//开关A1
-				GPIO_CHANGE_FLAG=1;
 			}
 			if(((B2_ESP&0x01)==0x01&&(DataRe_ESP.data[BOT2]&0x01)==0)||((B2_ESP&0x02)==0x02&&(DataRe_ESP.data[BOT2]&0x02)==0))
 			{
 				//开关A关
-				GPIO_CHANGE_FLAG=2;
 			}
 			if((B2_ESP&0x02)==0&&(DataRe_ESP.data[BOT2]&0x02)==0x02)
 			{
@@ -228,12 +222,10 @@ void CAL_MESSAGE_ESP(void)
 			if((B2_ESP&0x04)==0&&(DataRe_ESP.data[BOT2]&0x04)==0x04)
 			{
 				//开关B1
-				GPIO_CHANGE_FLAG=3;
 			}
 			if(((B2_ESP&0x04)==0x04&&(DataRe_ESP.data[BOT2]&0x04)==0)||((B2_ESP&0x08)==0x08&&(DataRe_ESP.data[BOT2]&0x08)==0))
 			{
 				//开关B关
-				GPIO_CHANGE_FLAG=4;
 			}
 			if((B2_ESP&0x08)==0&&(DataRe_ESP.data[BOT2]&0x08)==0x08)
 			{

@@ -213,7 +213,7 @@ int main(void)
 	rtP.DEADBAND_CH2_4 = 800;
 	rtP.TRANS_CH2_3  = 0.1;
 	rtP.TRANS_CH2_4  = 0.1;
-	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // ����ɿ�???
+	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // ����ɿ�????
 	
 	HAL_Delay(500);
   /* USER CODE END 2 */

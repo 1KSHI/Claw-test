@@ -1,6 +1,6 @@
 Dependencies for Project '2024_2_27_STM32_YAW_TEST_PROJECT', Target '2024_2_27_STM32_YAW_TEST_PROJECT': (DO NOT MODIFY !)
-F (startup_stm32f407xx.s)(0x666D9D03)(--cpu Cortex-M4.fp -g --apcs=interwork -I.\RTE\_2024_2_27_STM32_YAW_TEST_PROJECT-IE:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IE:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 524" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1"--list startup_stm32f407xx.lst --xref -o 2024_2_27_stm32_yaw_test_project\startup_stm32f407xx.o --depend 2024_2_27_stm32_yaw_test_project\startup_stm32f407xx.d)
-F (../Core/Src/main.c)(0x666DA13D)(--c99 -c --cpu Cortex-M4.fp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Core/CALCULATE -I ../Core/bsp_can -I ../Core/PID_MODEL -I ../Core/new_logic-I.\RTE\_2024_2_27_STM32_YAW_TEST_PROJECT-IE:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IE:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4-o 2024_2_27_stm32_yaw_test_project\main.o --omf_browse 2024_2_27_stm32_yaw_test_project\main.crf --depend 2024_2_27_stm32_yaw_test_project\main.d)
+F (startup_stm32f407xx.s)(0x666FFFEA)(--cpu Cortex-M4.fp -g --apcs=interwork -I.\RTE\_2024_2_27_STM32_YAW_TEST_PROJECT-IE:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IE:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 524" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1"--list startup_stm32f407xx.lst --xref -o 2024_2_27_stm32_yaw_test_project\startup_stm32f407xx.o --depend 2024_2_27_stm32_yaw_test_project\startup_stm32f407xx.d)
+F (../Core/Src/main.c)(0x667000E7)(--c99 -c --cpu Cortex-M4.fp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Core/CALCULATE -I ../Core/bsp_can -I ../Core/PID_MODEL -I ../Core/new_logic-I.\RTE\_2024_2_27_STM32_YAW_TEST_PROJECT-IE:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IE:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4-o 2024_2_27_stm32_yaw_test_project\main.o --omf_browse 2024_2_27_stm32_yaw_test_project\main.crf --depend 2024_2_27_stm32_yaw_test_project\main.d)
 I (../Core/Inc/main.h)(0x65DE0419)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x655B1512)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x66679EA4)
@@ -48,8 +48,8 @@ I (E:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\core_cm4.h)(0x5898498A)
 I (E:\Keil_v5\ARM\ARMCC\include\string.h)(0x588B8344)
 I (E:\Keil_v5\ARM\ARMCC\include\math.h)(0x588B8344)
 I (../Core/bsp_can/bsp_can.h)(0x6662F71A)
-I (../Core/CALCULATE/CALCULATE.h)(0x666C3616)
-I (../Core/new_logic/new_logic.h)(0x666D9AC2)
+I (../Core/CALCULATE/CALCULATE.h)(0x667000D3)
+I (../Core/new_logic/new_logic.h)(0x66700102)
 F (../Core/Src/gpio.c)(0x66683018)(--c99 -c --cpu Cortex-M4.fp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Core/CALCULATE -I ../Core/bsp_can -I ../Core/PID_MODEL -I ../Core/new_logic-I.\RTE\_2024_2_27_STM32_YAW_TEST_PROJECT-IE:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IE:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4-o 2024_2_27_stm32_yaw_test_project\gpio.o --omf_browse 2024_2_27_stm32_yaw_test_project\gpio.crf --depend 2024_2_27_stm32_yaw_test_project\gpio.d)
 I (../Core/Inc/gpio.h)(0x65DE0418)
 I (../Core/Inc/main.h)(0x65DE0419)
@@ -1018,7 +1018,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x655B1512)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x655B1512)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x655B1512)
 F (..\Core\CALCULATE\CALCULATE.c)(0x666C5346)(--c99 -c --cpu Cortex-M4.fp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Core/CALCULATE -I ../Core/bsp_can -I ../Core/PID_MODEL -I ../Core/new_logic-I.\RTE\_2024_2_27_STM32_YAW_TEST_PROJECT-IE:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IE:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4-o 2024_2_27_stm32_yaw_test_project\calculate.o --omf_browse 2024_2_27_stm32_yaw_test_project\calculate.crf --depend 2024_2_27_stm32_yaw_test_project\calculate.d)
-I (..\Core\CALCULATE\CALCULATE.h)(0x666C3616)
+I (..\Core\CALCULATE\CALCULATE.h)(0x667000D3)
 I (../Core/Inc/main.h)(0x65DE0419)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x655B1512)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x66679EA4)
@@ -1053,10 +1053,10 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x655B1512)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x655B1512)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x655B1512)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x655B1512)
-I (../Core/new_logic/new_logic.h)(0x666D9AC2)
+I (../Core/new_logic/new_logic.h)(0x66700102)
 I (../Core/Inc/i2c.h)(0x6667B9E6)
 I (../Core/Inc/tim.h)(0x666D9D01)
-F (..\Core\CALCULATE\CALCULATE.h)(0x666C3616)()
+F (..\Core\CALCULATE\CALCULATE.h)(0x667000D3)()
 F (..\Core\bsp_can\bsp_can.c)(0x6662F701)(--c99 -c --cpu Cortex-M4.fp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Core/CALCULATE -I ../Core/bsp_can -I ../Core/PID_MODEL -I ../Core/new_logic-I.\RTE\_2024_2_27_STM32_YAW_TEST_PROJECT-IE:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IE:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4-o 2024_2_27_stm32_yaw_test_project\bsp_can.o --omf_browse 2024_2_27_stm32_yaw_test_project\bsp_can.crf --depend 2024_2_27_stm32_yaw_test_project\bsp_can.d)
 I (..\Core\bsp_can\bsp_can.h)(0x6662F71A)
 I (E:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -1104,8 +1104,8 @@ I (..\Core\PID_MODEL\rtwtypes.h)(0x6662F68E)
 F (..\Core\PID_MODEL\PID_MODEL.h)(0x6662F68E)()
 F (..\Core\PID_MODEL\rtmodel.h)(0x6662F68E)()
 F (..\Core\PID_MODEL\rtwtypes.h)(0x6662F68E)()
-F (..\Core\new_logic\new_logic.c)(0x666DA28B)(--c99 -c --cpu Cortex-M4.fp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Core/CALCULATE -I ../Core/bsp_can -I ../Core/PID_MODEL -I ../Core/new_logic-I.\RTE\_2024_2_27_STM32_YAW_TEST_PROJECT-IE:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IE:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4-o 2024_2_27_stm32_yaw_test_project\new_logic.o --omf_browse 2024_2_27_stm32_yaw_test_project\new_logic.crf --depend 2024_2_27_stm32_yaw_test_project\new_logic.d)
-I (..\Core\new_logic\new_logic.h)(0x666D9AC2)
+F (..\Core\new_logic\new_logic.c)(0x66700070)(--c99 -c --cpu Cortex-M4.fp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Core/CALCULATE -I ../Core/bsp_can -I ../Core/PID_MODEL -I ../Core/new_logic-I.\RTE\_2024_2_27_STM32_YAW_TEST_PROJECT-IE:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IE:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4-o 2024_2_27_stm32_yaw_test_project\new_logic.o --omf_browse 2024_2_27_stm32_yaw_test_project\new_logic.crf --depend 2024_2_27_stm32_yaw_test_project\new_logic.d)
+I (..\Core\new_logic\new_logic.h)(0x66700102)
 I (../Core/Inc/main.h)(0x65DE0419)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x655B1512)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x66679EA4)
@@ -1141,4 +1141,4 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x655B1512)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x655B1512)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x655B1512)
 I (../Core/Inc/i2c.h)(0x6667B9E6)
-F (..\Core\new_logic\new_logic.h)(0x666D9AC2)()
+F (..\Core\new_logic\new_logic.h)(0x66700102)()

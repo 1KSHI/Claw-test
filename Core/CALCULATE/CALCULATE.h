@@ -52,7 +52,8 @@ extern uint8_t Cal_Parity_ESP;
 
 
 // 当前状态
-extern enum State current_state;
+extern uint8_t next_state;
+extern uint8_t LOGIC_FLAG;
 extern int button_press_count;
 uint8_t CalculateParity(const uint8_t* data, int dataSize);
 
