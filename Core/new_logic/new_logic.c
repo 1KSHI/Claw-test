@@ -62,73 +62,42 @@ void handle_HIGH_TORQUE(uint8_t *motorExtent){
     
 }
 
-
-
 void task_yaw_catch(void){
-    
-    motorExtent.state = 0xab;
-    HIGH_TROQUE_TRANS_FLAG=1;
-    HAL_Delay(5000);
-    YAW_TGT[M_3508] = 120;
-    HAL_Delay(5000);
-    YAW_TGT[M_3508] = 900;
-    HAL_Delay(5000);
+    YAW_TGT[M_3508] = 1000;
+    HAL_Delay(4000);
     motorExtent.state = 0xcd;
     HIGH_TROQUE_TRANS_FLAG=1;
-    HAL_Delay(5000);
-    
+    HAL_Delay(4000);
 }
 
 void task_yaw_replace(void){
-    HAL_Delay(500);
     motorExtent.state = 0xab;
-    handle_HIGH_TORQUE((uint8_t *)&motorExtent);
-    HAL_Delay(2000);
-    handle_M_3508_DOWN();
-    HAL_Delay(500);
+    HIGH_TROQUE_TRANS_FLAG =1;
+    HAL_Delay(4000);
+    YAW_TGT[M_3508] = 120;
+    HAL_Delay(4000);
 }
 
 void init(void){
-    handle_FRONT_LEN_SERVO_ON();
+    motorExtent.state = 0xab;
+    HIGH_TROQUE_TRANS_FLAG=1;
+    HAL_Delay(1000);
+    YAW_TGT[M_3508] = 120;
+    HAL_Delay(1000);
 }
 
 void close(void){
-    handle_FRONT_LEN_SERVO_OFF();
+
 }
 
 void LOGIC(void){
     if(LOGIC_FLAG){
-        switch(logic_state){
-            case 0:
-                init();
-                break;
-            case 1:
-                task_yaw_catch();
-                break;
-            case 2:
-                task_yaw_replace();
-                break;
-            case 3:
-                handle_TRANS_ON();
-                break;
-            case 4:
-                handle_TRANS_OFF();
-                break;
-            case 5:
-                handle_PLACE_SERVO_ON();
-                break;
-            case 6:
-                handle_PLACE_SERVO_OFF();
-                break;
-            case 7:
-                close();
-                break;
-            default:
-                break;
+        if(current_state != next_state){
+            func_table[next_state]();
+            current_state = next_state;
         }
         LOGIC_FLAG=0;
     }
 }
-
 
 

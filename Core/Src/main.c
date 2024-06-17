@@ -46,62 +46,42 @@ extern motor_measure_t *motor_data_can2[8];
   ******************************************************************************
   * @attention
   *
-  *	�ϵ�ǰע��������ID������logic.h�У�
+  *	check moto id before use the project
   *
-  *	2006������Ϊ4
-  *	3508������Ϊ3
+  *	2006 ID 1
+  *	3508 ID 0
   *
   ******************************************************************************
   */
 
 /*------------------------------------------------------------------------------
 	PID
-	PID����
+	PID value
 ------------------------------------------------------------------------------*/
-
-//Ŀ��Ƕ�???
+//angle target(uncalculated)
 float YAW_TGT[8] = {0};
 float M_3508_YAW_TGT=0;
-//Ŀ���ٶ�
 float SPD_TGT[8] = {0};//{-500,500}
-//�����ĽǶ�
+//angle target(calculated)
 float ANG_TGT[8] = {0};
-//��ǰ�Ƕ�
 float current_ang=0;
-//can������?
 int can_output[8] = {0};
-//��־λ
+
 uint8_t FLAG=0;
 
 /*------------------------------------------------------------------------------
-	�����???
-	�����ϵ�����ʼ��
-	�������ԣ����Ѳ��ã�
+	controller value
 ------------------------------------------------------------------------------*/
-////RESET���???
-//float ZERO_POINT[8] ={0};
-////��ת��ʼ�ͽ����ķ��ؽǶ���Ȧ�������ʱ��???1s��
-//float STL_BGN_ANG[8]={0,0},STL_END_ANG[8]={0,0};
-////��ת���???
-//int stl_error[8]={0};
-////��תʱ�������???
-//int stl_counter[8]={0};
-//uint8_t init_FLAG[8]={0};
-
-/*------------------------------------------------------------------------------
-	ң��������
-	���ڼ��ң������������???
-------------------------------------------------------------------------------*/
-//���սṹ��
+//struct
 DataPacket DataRe_ESP;
 DataPacket DataRe_LORA;
-//ҡ�˱���
+//rocker value
 int16_t lx_ESP ,ly_ESP,rx_ESP,ry_ESP,lp_ESP,rp_ESP;
 int16_t lx_LORA ,ly_LORA,rx_LORA,ry_LORA,lp_LORA,rp_LORA;
-//��������
+//bottom value
 uint8_t B1_ESP,B2_ESP;
 uint8_t B1_LORA,B2_LORA;
-//У��λ
+
 uint8_t Cal_Parity_ESP;
 uint8_t Cal_Parity_LORA;
 //FALG
@@ -109,24 +89,20 @@ uint8_t USART_FLAG_ESP=0;
 uint8_t USART_FLAG_LORA=0;
 	
 /*------------------------------------------------------------------------------
-	target_monitor����
-	�����жϵ���Ƿ񵽴�Ŀ��Ƕ�
+	target_monitor
 ------------------------------------------------------------------------------*/
-//��ǰ�Ƕ�
 float current_target[8]={0};
-//�Ƕ����???
 float target_error[8]={0};
-//���Ա��������ڿ�ͼ��΢��PID
 float test_target=0;
 
 uint16_t HT_moto_yaw=0;
 
 uint8_t LOGIC_FLAG=0;
-uint8_t logic_state=0;
+uint8_t next_state=0;
 uint8_t I2C_TRANS_FLAG=0;
 uint8_t M_3508_TRANS_FLAG=0;
 uint8_t HIGH_TROQUE_TRANS_FLAG=0;
-
+uint8_t current_state=0;
 uint8_t GPIO_CHANGE_STATE_1;
 uint8_t GPIO_CHANGE_STATE_2;
 uint8_t GPIO_CHANGE_FLAG=0;
@@ -198,13 +174,13 @@ int main(void)
 	
 	HAL_TIM_Base_Start_IT(&htim10); 
 	
-	//PWM��ʼ
+	//PWM start
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
-	//CAN��ʼ��
+	//CAN init
 	can_filter_init();
 	HAL_CAN_Start(&hcan2); 
 	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
-	//DMA��ʼ
+	//DMA start
 	HAL_UART_Receive_DMA(&huart3, (uint8_t*)&DataRe_ESP,1);
 	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&DataRe_LORA,1);
 	/*PID*/
@@ -240,8 +216,6 @@ int main(void)
 	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // ����ɿ�???
 	
 	HAL_Delay(500);
-	YAW_TGT[M_3508] = 120;
-  motorExtent.state = 0xab;
   /* USER CODE END 2 */
 
   /* Infinite loop */
