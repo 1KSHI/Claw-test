@@ -77,31 +77,28 @@ void task_yaw_catch(void){
     handle_FRONT_CATCH_SERVO_ON();
     HAL_Delay(1000);
     YAW_TGT[M_3508] = 1000;
-    HAL_Delay(2000);
-    handle_FRONT_LEN_SERVO_OFF();
-    HAL_Delay(1000);
-    motorExtent.state = 0xcd;
-    HIGH_TROQUE_TRANS_FLAG=1;
-    HAL_Delay(2000);
-    handle_FRONT_CATCH_SERVO_OFF();
+    // motorExtent.state = 0xcd;
+    // HIGH_TROQUE_TRANS_FLAG=1;
+    // HAL_Delay(2000);
+    // handle_FRONT_CATCH_SERVO_OFF();
 }
 
 void task_yaw_replace(void){
-    motorExtent.state = 0xab;
-    HIGH_TROQUE_TRANS_FLAG =1;
+    // motorExtent.state = 0xab;
+    // HIGH_TROQUE_TRANS_FLAG =1;
+    // HAL_Delay(2000);
+    YAW_TGT[M_3508] = 0;
     HAL_Delay(2000);
-    YAW_TGT[M_3508] = 120;
-    HAL_Delay(3000);
-    handle_FRONT_LEN_SERVO_ON();
+    handle_FRONT_CATCH_SERVO_OFF();
 }
 
 void init(void){
     motorExtent.state = 0xab;
     HIGH_TROQUE_TRANS_FLAG=1;
     HAL_Delay(1000);
-    YAW_TGT[M_3508] = 120;
-    HAL_Delay(1000);
-    handle_FRONT_LEN_SERVO_ON();
+    YAW_TGT[M_3508] = 0;
+    // HAL_Delay(1000);
+    // handle_FRONT_LEN_SERVO_ON();
 }
 
 void close(void){
