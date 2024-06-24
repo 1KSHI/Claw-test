@@ -16,22 +16,30 @@ void handle_M_3508_DOWN(void){
 
 void handle_FRONT_CATCH_SERVO_ON(void){
     //GPIO控制
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+    SERVO_FLAG=1;
+    SWITCH_SERVO=1;
+    
 }
 
 void handle_FRONT_CATCH_SERVO_OFF(void){
     //GPIO控制
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+    SERVO_FLAG=1;
+    SWITCH_SERVO=2;
+    
 }
 
 void handle_FRONT_LEN_SERVO_ON(void){
     //GPIO控制
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+    SERVO_FLAG=1;
+    SWITCH_SERVO=3;
+   
 }
 
 void handle_FRONT_LEN_SERVO_OFF(void){
     //GPIO控制
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+    SERVO_FLAG=1;
+    SWITCH_SERVO=4;
+    
 }
 
 void handle_TRANS_ON(void){
@@ -66,19 +74,25 @@ void handle_HIGH_TORQUE(uint8_t *motorExtent){
 }
 
 void task_yaw_catch(void){
+    handle_FRONT_CATCH_SERVO_ON();
+    HAL_Delay(1000);
     YAW_TGT[M_3508] = 1000;
-    HAL_Delay(4000);
+    HAL_Delay(2000);
+    handle_FRONT_LEN_SERVO_OFF();
+    HAL_Delay(1000);
     motorExtent.state = 0xcd;
     HIGH_TROQUE_TRANS_FLAG=1;
-    HAL_Delay(4000);
+    HAL_Delay(2000);
+    handle_FRONT_CATCH_SERVO_OFF();
 }
 
 void task_yaw_replace(void){
     motorExtent.state = 0xab;
     HIGH_TROQUE_TRANS_FLAG =1;
-    HAL_Delay(4000);
+    HAL_Delay(2000);
     YAW_TGT[M_3508] = 120;
-    HAL_Delay(4000);
+    HAL_Delay(3000);
+    handle_FRONT_LEN_SERVO_ON();
 }
 
 void init(void){
@@ -87,6 +101,7 @@ void init(void){
     HAL_Delay(1000);
     YAW_TGT[M_3508] = 120;
     HAL_Delay(1000);
+    handle_FRONT_LEN_SERVO_ON();
 }
 
 void close(void){
@@ -108,9 +123,24 @@ func_ptr func_table[] = {
 void LOGIC(void){
     if(LOGIC_FLAG){
         if(current_state != next_state){
+            if(next_state==task_yaw_catch && catch_en){
+                func_table[next_state]();
+                current_state = next_state;
+                catch_en=0;
+            }
+            if(next_state==task_yaw_replace && !catch_en){
+                func_table[next_state]();
+                current_state = next_state;
+                catch_en=1;
+            }
+            if(next_state!=task_yaw_catch || next_state!=task_yaw_replace){
+                func_table[next_state]();
+                current_state = next_state;
+            }   
+        } else if(next_state==init){
             func_table[next_state]();
-            current_state = next_state;
         }
+
         LOGIC_FLAG=0;
     }
 }

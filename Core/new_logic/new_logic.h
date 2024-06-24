@@ -11,14 +11,28 @@ typedef struct
   uint8_t state;
 } MotorExtentTypeDef;
 
-typedef void (*func_ptr)();
+enum state{
+  init=0,
+  task_yaw_catch=1,
+  task_yaw_replace=2,
+  handle_TRANS_ON=3,
+  handle_TRANS_OFF=4,
+  handle_PLACE_SERVO_ON=5,
+  handle_PLACE_SERVO_OFF=6,
+  close=7
+};
 
+
+typedef void (*func_ptr)();
+extern uint8_t catch_en;
 extern uint8_t HIGH_TROQUE_TRANS_FLAG;
+extern uint8_t SERVO_FLAG;
+extern uint8_t SWITCH_SERVO;
 extern MotorExtentTypeDef motorExtent;
 extern float YAW_TGT[8];
 extern uint8_t LOGIC_FLAG;
-extern uint8_t next_state;
-extern uint8_t current_state;
+extern enum state next_state;
+extern enum state current_state;
 
 void handle_M_3508_UP(void);
 void handle_M_3508_DOWN(void);

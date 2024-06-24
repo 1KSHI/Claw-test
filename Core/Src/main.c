@@ -96,13 +96,16 @@ float target_error[8]={0};
 float test_target=0;
 
 uint16_t HT_moto_yaw=0;
-
+uint8_t catch_en=1;
 uint8_t LOGIC_FLAG=0;
-uint8_t next_state=0;
+enum state current_state=init;
+enum state next_state=init;
 uint8_t I2C_TRANS_FLAG=0;
 uint8_t M_3508_TRANS_FLAG=0;
 uint8_t HIGH_TROQUE_TRANS_FLAG=0;
-uint8_t current_state=0;
+uint8_t SERVO_FLAG=0;
+uint8_t SWITCH_SERVO=0;
+
 uint8_t GPIO_CHANGE_STATE_1;
 uint8_t GPIO_CHANGE_STATE_2;
 uint8_t GPIO_CHANGE_FLAG=0;
@@ -213,7 +216,7 @@ int main(void)
 	rtP.DEADBAND_CH2_4 = 800;
 	rtP.TRANS_CH2_3  = 0.1;
 	rtP.TRANS_CH2_4  = 0.1;
-	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // ����ɿ�????
+	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 17000);  // ����ɿ�?????
 	
 	HAL_Delay(500);
   /* USER CODE END 2 */
@@ -323,6 +326,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         HIGH_TROQUE_TRANS_FLAG=0;
       }
       
+    }
+
+    if(SERVO_FLAG){
+      switch(SWITCH_SERVO){
+        case 1:
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+        break;
+        case 2:
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+        break;
+        case 3:
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+        break;
+        case 4:
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+        break;
+        default:
+        break;
+      }
     }
 //		target_monitor(); 
 		/* 3508 */
